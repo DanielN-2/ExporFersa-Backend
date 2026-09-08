@@ -1,4 +1,4 @@
-package br.edu.ufersa.ExporFersa.application;
+package br.edu.ufersa.ExporFersa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
