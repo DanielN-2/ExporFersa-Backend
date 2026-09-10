@@ -1,7 +1,7 @@
 package br.edu.ufersa.ExporFersa.API.projeto.controllers;
 
-import br.edu.ufersa.ExporFersa.API.projeto.dtos.ProjetoCreate;
-import br.edu.ufersa.ExporFersa.API.projeto.dtos.ProjetoResponse;
+import br.edu.ufersa.ExporFersa.API.projeto.dtos.ProjectCreateDTO;
+import br.edu.ufersa.ExporFersa.API.projeto.dtos.ProjectResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -12,15 +12,15 @@ import java.util.List;
 @RequestMapping("/api/v1/eventos/{eventoId}/projetos")
 public class ProjetoEventoController {
     @GetMapping()
-    public ResponseEntity<List<ProjetoResponse>> listarPorEvento(
+    public ResponseEntity<List<ProjectResponseDTO>> listarPorEvento(
             @PathVariable Long eventoId
     ) {
         return null;
     }
     @PostMapping()
-    public ResponseEntity<ProjetoResponse> cadastrar(
+    public ResponseEntity<ProjectResponseDTO> cadastrar(
             @PathVariable Long eventoId,
-            @RequestBody ProjetoCreate dto,
+            @RequestBody ProjectCreateDTO dto,
             UriComponentsBuilder uriBuilder
     ){
         return null;

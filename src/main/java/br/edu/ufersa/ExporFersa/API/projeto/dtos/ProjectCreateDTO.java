@@ -1,15 +1,13 @@
 package br.edu.ufersa.ExporFersa.API.projeto.dtos;
-
 import java.util.List;
-
-public record ProjetoUpdate(
+public record ProjectCreateDTO(
         String nomeProjeto,
         List<String> autores,
         String videoURL,
         String resumo,
         String descricao
 ) {
-    public ProjetoUpdate {
+    public ProjectCreateDTO {
         if (nomeProjeto == null || nomeProjeto.isBlank()) {
             throw new IllegalArgumentException("O nome do projeto é obrigatório!");
         }

@@ -1,5 +1,5 @@
 package br.edu.ufersa.ExporFersa.API.evento.dtos;
 
-public record EventoResposta() {
+public record EventResponseDTO() {
     
 }

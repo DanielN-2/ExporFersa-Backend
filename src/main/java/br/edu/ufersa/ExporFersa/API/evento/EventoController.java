@@ -13,37 +13,37 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.edu.ufersa.ExporFersa.API.evento.dtos.EventoCriar;
-import br.edu.ufersa.ExporFersa.API.evento.dtos.EventoDeletar;
-import br.edu.ufersa.ExporFersa.API.evento.dtos.EventoResposta;
-import br.edu.ufersa.ExporFersa.API.evento.dtos.EventoAtualizar;
+import br.edu.ufersa.ExporFersa.API.evento.dtos.EventCreateDTO;
+import br.edu.ufersa.ExporFersa.API.evento.dtos.EventDeleteDTO;
+import br.edu.ufersa.ExporFersa.API.evento.dtos.EventResponseDTO;
+import br.edu.ufersa.ExporFersa.API.evento.dtos.EventoUpdateDTO;
 
 @RestController()
 @RequestMapping("/api/v1/evento")
 public class EventoController {
 
     @PostMapping
-    public ResponseEntity<EventoResposta> CreateEvent(EventoCriar evento) {
+    public ResponseEntity<EventResponseDTO> CreateEvent(EventCreateDTO evento) {
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @GetMapping("/{categoriaEvento}")
-    public ResponseEntity<List<EventoResposta>> ListEvents(@PathVariable String categoriaEvento) {
+    public ResponseEntity<List<EventResponseDTO>> ListEvents(@PathVariable String categoriaEvento) {
         return ResponseEntity.ok(null);
     }
 
     @GetMapping("/{idEvento}")
-    public ResponseEntity<EventoResposta> GetSingleEvent(@PathVariable UUID idEvento) {
+    public ResponseEntity<EventResponseDTO> GetSingleEvent(@PathVariable UUID idEvento) {
         return ResponseEntity.ok(null);
     } 
 
     @PutMapping("/{idEvento}")
-    public ResponseEntity<EventoResposta> UpdateEvent(@PathVariable UUID idEvento, EventoAtualizar eventoNovo) {
+    public ResponseEntity<EventResponseDTO> UpdateEvent(@PathVariable UUID idEvento, EventoUpdateDTO eventoNovo) {
         return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("/{idEvento}")
-    public ResponseEntity<Void> DeleteEvent(@PathVariable UUID idEvento, EventoDeletar eventoDel) {
+    public ResponseEntity<Void> DeleteEvent(@PathVariable UUID idEvento, EventDeleteDTO eventoDel) {
         return ResponseEntity.ok(null);
     }
     
