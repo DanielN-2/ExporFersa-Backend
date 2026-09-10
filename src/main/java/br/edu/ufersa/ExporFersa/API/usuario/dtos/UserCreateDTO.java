@@ -19,7 +19,7 @@ public record UserCreateDTO (
             );
         }
         if (username == null || username.isBlank()) {
-            throw new IllegalArgumentException("O nome de usuario e obrigatorio!")
+            throw new IllegalArgumentException("O nome de usuario e obrigatorio!");
         }
     }
 }
