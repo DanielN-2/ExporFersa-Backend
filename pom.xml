@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>br.edu.ufersa</groupId>
-	<artifactId>ExporFersa.API</artifactId>
+	<artifactId>ExporFersa.ExporfersaAPI</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
