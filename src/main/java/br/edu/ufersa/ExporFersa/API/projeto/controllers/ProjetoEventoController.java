@@ -9,7 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/eventos/${eventoId}/projetos")
+@RequestMapping("/api/v1/eventos/{eventoId}/projetos")
 public class ProjetoEventoController {
     @GetMapping()
     public ResponseEntity<List<ProjetoResponse>> listarPorEvento(

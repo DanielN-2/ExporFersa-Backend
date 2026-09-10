@@ -15,27 +15,27 @@ public class ProjetoController {
     public ResponseEntity<List<ProjetoResponse>> listar() {
         return null;
     }
-    @GetMapping("/${projetoId}")
+    @GetMapping("/{projetoId}")
     public ResponseEntity<ProjetoResponse> buscarPorId(
             @PathVariable Long projetoId
     ) {
         return null;
     }
-    @PutMapping("${projetoId}")
+    @PutMapping("{projetoId}")
     public ResponseEntity<ProjetoResponse> atualizar(
             @PathVariable Long projetoId,
             @RequestBody ProjetoUpdate dto
     ) {
         return null;
     }
-    @PatchMapping("${projetoId")
+    @PatchMapping("{projetoId}")
     public ResponseEntity<ProjetoResponse> alterarParcial(
             @PathVariable Long projetoId,
             @RequestBody ProjetoPatch dto
             ) {
         return null;
     }
-    @DeleteMapping("${projetoId}")
+    @DeleteMapping("{projetoId}")
     public ResponseEntity<Void> remover(
             @PathVariable Long projetoId
     ) {
