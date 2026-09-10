@@ -1,9 +1,10 @@
 package br.edu.ufersa.ExporFersa.API.projeto.dtos;
 
 import java.util.List;
+import java.util.UUID;
 
 public record ProjectResponseDTO(
-        Long id,
+        UUID id,
         String nomeProjeto,
         List<String> autores,
         String videoURL,
