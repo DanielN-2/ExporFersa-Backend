@@ -1,13 +1,9 @@
 package br.edu.ufersa.ExporFersa.API.usuario;
 
+import br.edu.ufersa.ExporFersa.API.usuario.dtos.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import br.edu.ufersa.ExporFersa.API.usuario.dtos.UserCreateDTO;
-import br.edu.ufersa.ExporFersa.API.usuario.dtos.UserLoginDTO;
-import br.edu.ufersa.ExporFersa.API.usuario.dtos.UserResponseDTO;
-import br.edu.ufersa.ExporFersa.API.usuario.dtos.UserUpdateDTO;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +39,11 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluirUsuario(@PathVariable UUID id) {
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/senha")
+    ResponseEntity<Void> alterarSenha(@PathVariable UUID id, @RequestBody UserPasswordUpdateDTO dto) {
         return ResponseEntity.noContent().build();
     }
 }
