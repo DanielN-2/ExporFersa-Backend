@@ -1,5 +1,5 @@
 package br.edu.ufersa.ExporFersa.API.usuario.dtos;
 
-public class UserLogin {
+public class UserLoginDTO {
     
 }

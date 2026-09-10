@@ -1,24 +1,25 @@
 package br.edu.ufersa.ExporFersa.API.projeto.dtos;
-
 import java.util.List;
-
-public record ProjetoResponse(
-        Long id,
+public record ProjectCreateDTO(
         String nomeProjeto,
         List<String> autores,
         String videoURL,
         String resumo,
         String descricao
 ) {
-    public ProjetoResponse {
-        if(id == null)
-            throw new IllegalArgumentException("O ID é obrigatório!");
-        if(nomeProjeto == null || nomeProjeto.isBlank() )
-            throw new IllegalArgumentException("O nome do projeto é obrigatório");
+    public ProjectCreateDTO {
+        if (nomeProjeto == null || nomeProjeto.isBlank()) {
+            throw new IllegalArgumentException("O nome do projeto é obrigatório!");
+        }
+
+        if (autores == null || autores.isEmpty()) {
+            throw new IllegalArgumentException("O projeto deve possuir pelo menos um autor!");
+        }
 
         if (autores.stream().anyMatch(autor -> autor == null || autor.isBlank())) {
             throw new IllegalArgumentException("O nome dos autores não pode ser vazio!");
         }
+
         if (videoURL == null || videoURL.isBlank()) {
             throw new IllegalArgumentException("A URL do vídeo é obrigatória!");
         }
