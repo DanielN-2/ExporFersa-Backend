@@ -1,5 +1,15 @@
 package br.edu.ufersa.ExporFersa.API.usuario.dtos;
 
-public class UserLoginDTO {
-    
+public record UserLoginDTO (
+        String username,
+        String senha
+) {
+    public UserLoginDTO {
+        if (username == null || username.isBlank()) {
+            throw new IllegalArgumentException("O usuario e obrigatorio!");
+        }
+        if (senha == null || senha.isBlank()) {
+            throw new IllegalArgumentException("A senha e obrigatoria!");
+        }
+    }
 }
