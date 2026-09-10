@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/usuario")
+@RequestMapping("/api/v1/user")
 public class UsuarioController {
 
     @PostMapping
@@ -42,7 +42,7 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    @PatchMapping("/{id}/senha")
+    @PatchMapping("/{id}/password")
     ResponseEntity<Void> alterarSenha(@PathVariable UUID id, @RequestBody UserPasswordUpdateDTO dto) {
         return ResponseEntity.noContent().build();
     }

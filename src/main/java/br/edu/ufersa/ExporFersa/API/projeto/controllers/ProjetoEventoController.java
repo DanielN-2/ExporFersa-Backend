@@ -9,17 +9,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/eventos/{eventoId}/projetos")
+@RequestMapping("/api/v1/events/{eventId}/projects")
 public class ProjetoEventoController {
     @GetMapping()
     public ResponseEntity<List<ProjectResponseDTO>> listarPorEvento(
-            @PathVariable Long eventoId
+            @PathVariable Long eventId
     ) {
         return null;
     }
     @PostMapping()
     public ResponseEntity<ProjectResponseDTO> cadastrar(
-            @PathVariable Long eventoId,
+            @PathVariable Long eventId,
             @RequestBody ProjectCreateDTO dto,
             UriComponentsBuilder uriBuilder
     ){

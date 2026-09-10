@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 import br.edu.ufersa.ExporFersa.API.evento.dtos.EventCreateDTO;
 import br.edu.ufersa.ExporFersa.API.evento.dtos.EventDeleteDTO;
 import br.edu.ufersa.ExporFersa.API.evento.dtos.EventResponseDTO;
-import br.edu.ufersa.ExporFersa.API.evento.dtos.EventoUpdateDTO;
+import br.edu.ufersa.ExporFersa.API.evento.dtos.EventUpdateDTO;
 
 @RestController()
-@RequestMapping("/api/v1/evento")
+@RequestMapping("/api/v1/events")
 public class EventoController {
 
     @PostMapping
@@ -27,23 +27,23 @@ public class EventoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
-    @GetMapping("/{categoriaEvento}")
-    public ResponseEntity<List<EventResponseDTO>> ListEvents(@PathVariable String categoriaEvento) {
+    @GetMapping("/{eventCategory}")
+    public ResponseEntity<List<EventResponseDTO>> ListEvents(@PathVariable String eventCategory) {
         return ResponseEntity.ok(null);
     }
 
-    @GetMapping("/{idEvento}")
-    public ResponseEntity<EventResponseDTO> GetSingleEvent(@PathVariable UUID idEvento) {
+    @GetMapping("/{eventId}")
+    public ResponseEntity<EventResponseDTO> GetSingleEvent(@PathVariable UUID eventId) {
         return ResponseEntity.ok(null);
     } 
 
-    @PutMapping("/{idEvento}")
-    public ResponseEntity<EventResponseDTO> UpdateEvent(@PathVariable UUID idEvento, EventoUpdateDTO eventoNovo) {
+    @PutMapping("/{eventId}")
+    public ResponseEntity<EventResponseDTO> UpdateEvent(@PathVariable UUID eventId, EventUpdateDTO newEvent) {
         return ResponseEntity.ok(null);
     }
 
-    @DeleteMapping("/{idEvento}")
-    public ResponseEntity<Void> DeleteEvent(@PathVariable UUID idEvento, EventDeleteDTO eventoDel) {
+    @DeleteMapping("/{eventId}")
+    public ResponseEntity<Void> DeleteEvent(@PathVariable UUID eventId, EventDeleteDTO eventoDel) {
         return ResponseEntity.ok(null);
     }
     

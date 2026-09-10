@@ -19,7 +19,7 @@ import br.edu.ufersa.ExporFersa.API.comentario.dtos.CommentCreateDTO;
 import br.edu.ufersa.ExporFersa.API.comentario.dtos.CommentUpdateDTO;
 
 @RestController 
-@RequestMapping("/api/projects/{projectId}/comments")
+@RequestMapping("/api/v1/projects/{projectId}/comments")
 public class ComentarioController {
     
     @PostMapping()

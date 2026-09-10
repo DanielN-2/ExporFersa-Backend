@@ -1,9 +1,5 @@
 package br.edu.ufersa.ExporFersa.API.usuario.dtos;
 
-import br.edu.ufersa.ExporFersa.domain.projeto.Projeto;
-
-import java.util.List;
-
 public record UserCreateDTO (
         String email,
         String senha,
