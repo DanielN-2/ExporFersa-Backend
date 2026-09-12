@@ -1,4 +1,4 @@
-package br.edu.ufersa.ExporFersa.API;
+package br.edu.ufersa.ExporFersa.ExporFersaAPI;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
