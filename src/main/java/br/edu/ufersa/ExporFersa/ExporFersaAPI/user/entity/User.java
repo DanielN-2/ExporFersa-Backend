@@ -1,9 +1,9 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.user.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,10 +12,9 @@ import java.util.UUID;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.entity.Project;
 
 @Entity
-@Table(name = "usuarios")
+@Table(name = "user")
 @Getter
-@Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id
@@ -29,21 +28,21 @@ public class User {
     private String username;
 
     @Column(nullable = false)
-    private String senha;
+    private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "usuario_likes",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "projeto_id")
+            name = "user_likes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     private List<Project> likes = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "usuario_projetos",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "projeto_id")
+            name = "user_projects",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "project_id")
     )
-    private List<Project> projetosQueFacoParte = new ArrayList<>();
+    private List<Project> projectsImIn = new ArrayList<>();
 }
