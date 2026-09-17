@@ -1,4 +1,4 @@
-package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.controller;
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments;
 
 import java.util.List;
 import java.util.UUID;
