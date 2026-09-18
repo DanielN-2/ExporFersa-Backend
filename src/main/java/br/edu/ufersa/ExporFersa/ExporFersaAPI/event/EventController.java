@@ -1,4 +1,4 @@
-package br.edu.ufersa.ExporFersa.ExporFersaAPI.event.controller;
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
 import java.util.List;
 import java.util.UUID;
