@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: expor-fersa-db
+    environment:
+      POSTGRES_DB: expor_fersa
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
