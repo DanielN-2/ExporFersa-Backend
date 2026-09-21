@@ -15,11 +15,11 @@ import jakarta.persistence.Table;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.records.OpeningHours;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.records.OperatingDate;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.entity.Project;
+
 
 @Entity 
 @Table(name = "tb_event")
-class Event {
+public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -41,9 +41,6 @@ class Event {
     @JoinColumn(name = "event_id")
     List<String> imagesURLs;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    @JoinColumn(name = "event_id")
-    List<Project> projects;
 
     protected Event(){};
 
@@ -53,6 +50,6 @@ class Event {
     public OperatingDate getOperatingDates() { return this.operatingDate; }
     public OpeningHours getOpeningHours() { return this.openingHours; }
     public List<String> getImagesURLs() { return this.imagesURLs; }
-    public List<Project> getProjects() { return this.projects; }
+
     
 }

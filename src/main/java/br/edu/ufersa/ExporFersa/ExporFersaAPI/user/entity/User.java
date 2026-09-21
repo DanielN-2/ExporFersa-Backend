@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.entity.Project;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.Project;
 
 @Entity
 @Table(name = "user")
