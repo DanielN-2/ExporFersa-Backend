@@ -1,0 +1,11 @@
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
+
+enum ProjectCategory {
+    CIENCIAS_AGRARIAS,
+    ENGENHARIA,
+    CIENCIAS_HUMANAS,
+    CIENCIAS_EXATAS_E_DA_TERRA,
+    CIENCIAS_BIOLOGICAS,
+    CIENCIAS_SOCIAIS_E_APLICADAS,
+    CIENCIAS_DA_SAUDE
+}
