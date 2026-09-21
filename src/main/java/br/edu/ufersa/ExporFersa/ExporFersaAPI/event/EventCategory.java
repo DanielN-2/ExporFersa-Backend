@@ -1,5 +1,5 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
-enum EventCategory {
+public enum EventCategory {
     PESQUISA, ENSINO, EXTENSAO;
 }

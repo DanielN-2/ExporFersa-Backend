@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventCreateDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventDeleteDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
 
@@ -43,7 +42,7 @@ public class EventController {
     }
 
     @DeleteMapping("/{eventId}")
-    public ResponseEntity<Void> DeleteEvent(@PathVariable UUID eventId, EventDeleteDTO eventoDel) {
+    public ResponseEntity<Void> DeleteEvent(@PathVariable UUID eventId) {
         return ResponseEntity.ok(null);
     }
     
