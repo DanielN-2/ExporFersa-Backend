@@ -1,7 +1,10 @@
-package br.edu.ufersa.ExporFersa.ExporFersaAPI.event.records;
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable 
 public record OperatingDate(
     LocalDate startDate,
     LocalDate endDate
