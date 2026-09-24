@@ -2,7 +2,6 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CollectionTable;
@@ -28,7 +27,7 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private Long id;
 
     @Column(nullable = false)
     private String name;
@@ -54,7 +53,6 @@ public class Event {
     protected Event(){}
 
     public Event(String name, EventCategory category, OperatingDate dates, OpeningHours hours) {
-        // código duplicado: Aqui, EventUpdateDTO e em EventCreateDTO
         if (name == null || category == null || dates == null || hours == null) {
             throw new IllegalArgumentException("Nenhum campo pode ser nulo.");
         }
@@ -69,7 +67,7 @@ public class Event {
         this.openingHours = hours;
     }
 
-    public UUID getId() { return this.id; }
+    public Long getId() { return this.id; }
     public String getName() { return this.name; }
     public EventCategory getCategory() { return this.category; }
     public OperatingDate getOperatingDates() { return this.operatingDate; }
