@@ -1,6 +1,5 @@
-package br.edu.ufersa.ExporFersa.ExporFersaAPI.user;
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

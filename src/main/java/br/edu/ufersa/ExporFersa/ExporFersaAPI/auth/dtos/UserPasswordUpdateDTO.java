@@ -1,4 +1,4 @@
-package br.edu.ufersa.ExporFersa.ExporFersaAPI.user.dtos;
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos;
 
 public record UserPasswordUpdateDTO(
         String senhaAntiga,

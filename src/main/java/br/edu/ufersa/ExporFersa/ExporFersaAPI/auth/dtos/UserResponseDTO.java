@@ -1,8 +1,8 @@
-package br.edu.ufersa.ExporFersa.ExporFersaAPI.user.dtos;
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos;
 
 import java.util.UUID;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.user.entity.User;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
 
 public record UserResponseDTO (
         UUID id,
