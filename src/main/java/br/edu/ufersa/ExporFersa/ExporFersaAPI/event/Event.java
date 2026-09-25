@@ -61,6 +61,10 @@ public class Event {
             throw new IllegalArgumentException("O nome não pode ser vazio.");
         }
 
+        if (name.length() < 3 || name.length() > 255) {
+            throw new IllegalArgumentException("O nome deve possuir de 3 a 255 caractere.s");
+        }
+
         this.name = name;
         this.category = category;
         this.operatingDate = dates;

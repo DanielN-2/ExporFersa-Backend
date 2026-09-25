@@ -9,14 +9,4 @@ public record EventUpdateDTO(
     EventCategory category,
     OperatingDate dates,
     OpeningHours hours
-) {
-    public EventUpdateDTO {
-        if (name == null || category == null || dates == null || hours == null) {
-            throw new IllegalArgumentException("Nenhum campo pode ser nulo.");
-        }
-
-        if (name.isBlank()) {
-            throw new IllegalArgumentException("O nome não pode ser vazio.");
-        }
-    }
-}
+) {}
