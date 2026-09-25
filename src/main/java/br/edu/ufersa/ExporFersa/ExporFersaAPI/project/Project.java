@@ -1,7 +1,7 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.user.entity.User;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;

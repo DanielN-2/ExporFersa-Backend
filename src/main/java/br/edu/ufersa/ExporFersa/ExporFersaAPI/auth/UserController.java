@@ -1,10 +1,13 @@
-package br.edu.ufersa.ExporFersa.ExporFersaAPI.user.controller;
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.bind.annotation.*;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.user.dtos.*;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,14 +16,30 @@ import java.util.UUID;
 @RequestMapping("/api/v1/user")
 public class UserController {
 
+    private final AuthenticationManager authenticationManager;
+    private final TokenService tokenService;
+    private final AuthService authService;
+
+    public UserController(AuthenticationManager authenticationManager,
+        TokenService tokenService,
+        AuthService authService
+    ) {
+        this.authenticationManager = authenticationManager;
+        this.tokenService = tokenService;
+        this.authService = authService;
+    }
+
     @PostMapping
     public ResponseEntity<UserResponseDTO> criarUsuario(@RequestBody UserCreateDTO usuario) {
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> logarUsuario(@RequestBody UserLoginDTO loginDto) {
-        return ResponseEntity.ok(null);
+    public ResponseEntity<TokenResponseDTO> logarUsuario(@RequestBody UserLoginDTO loginDto) {
+        var authToken = new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.senha());
+        var authentication = authenticationManager.authenticate(authToken);
+        String token = tokenService.generateToken((User) authentication.getPrincipal());
+        return ResponseEntity.ok(new TokenResponseDTO(token));
     }
 
     @GetMapping

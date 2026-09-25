@@ -1,13 +1,19 @@
-package br.edu.ufersa.ExporFersa.ExporFersaAPI.user.entity;
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.Project;
 
@@ -15,7 +21,7 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.Project;
 @Table(name = "user")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,6 +35,9 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(nullable = false)
+    private UserRole role;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -45,4 +54,29 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     private List<Project> projectsImIn = new ArrayList<>();
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(this.role == UserRole.ADMIN) {
+			return List.of(
+				new SimpleGrantedAuthority("ROLE_ADMIN"),
+				new SimpleGrantedAuthority("ROLE_USER"),
+				new SimpleGrantedAuthority("ROLE_GUEST")
+			);
+        }
+		if(this.role == UserRole.USER) {
+			return List.of(
+				new SimpleGrantedAuthority("ROLE_USER"),
+				new SimpleGrantedAuthority("ROLE_GUEST")
+			);
+        }
+		return List.of(new SimpleGrantedAuthority("ROLE_GUEST"));
+    }
+    
+    protected User(String username, String email, String password, UserRole role) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 }

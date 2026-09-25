@@ -1,9 +1,12 @@
-package br.edu.ufersa.ExporFersa.ExporFersaAPI.user.dtos;
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos;
+
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.UserRole;
 
 public record UserCreateDTO (
         String email,
         String senha,
-        String username
+        String username,
+        UserRole role
 ) {
     public UserCreateDTO {
         if (email == null || !email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
