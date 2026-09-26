@@ -1,5 +1,7 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
+import java.util.List;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -12,15 +14,11 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface EventMapper {
 
-    default Event toEntity(EventCreateDTO dto) {
-        if (dto == null) {
-            return null;
-        }
-
-        return new Event(dto.name(), dto.category(), dto.dates(), dto.hours());
-    }
+    Event toEntity(EventCreateDTO dto);
 
     EventResponseDTO toResponseDTO(Event entity);
+    
+    List<EventResponseDTO> toListResponseDTOs(List<Event> entities);
 
     @Mapping(target = "id", ignore = true)
     void updateEntityFromDTO(EventUpdateDTO dto, @MappingTarget Event entity);
