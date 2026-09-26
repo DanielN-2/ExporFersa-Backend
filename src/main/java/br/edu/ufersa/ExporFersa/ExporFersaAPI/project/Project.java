@@ -90,6 +90,10 @@ public class Project {
         this.status = ProjectStatus.PENDING;
     }
 
+    public Project(Long id) {
+        this.id = id;
+    }
+
     private void validateInvariants(
             ProjectName projectName,
             List<Author> authors,
@@ -153,7 +157,7 @@ public class Project {
         if (description != null) this.description = description;
         if (category != null) this.category = category;
     }
-    Long getId() {return id;}
+    public Long getId() {return id;}
     List<String> getImages() {return images;}
     Event getEvent() {return event;}
     User getUser() {return user;}
