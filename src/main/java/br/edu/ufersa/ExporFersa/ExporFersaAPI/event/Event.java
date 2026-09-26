@@ -29,7 +29,7 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.UUID)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -76,7 +76,7 @@ public class Event {
     public EventCategory getCategory() { return this.category; }
     public OperatingDate getOperatingDates() { return this.operatingDate; }
     public OpeningHours getOpeningHours() { return this.openingHours; }
-    public List<String> getImagesURLs() { return this.imagesURLs; }
+    public List<String> getImagesURLs() { return List.copyOf(imagesURLs); }
      
     @Override
     public boolean equals(Object obj) {
@@ -89,6 +89,7 @@ public class Event {
         }
 
         Event event = (Event) obj;
-        return (event.id == this.id);
+        return (id != null) && (event.id == this.id);
     }
+
 }

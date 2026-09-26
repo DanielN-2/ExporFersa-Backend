@@ -27,5 +27,6 @@ public record EventResponseDTO(
     @NotNull(message = "O campo de horário de funcionamento não pode ser nulo.")
     OpeningHours hours,
 
+    @NotNull(message = "A lista de URLs de imagens não pode ser nula.")
     List<String> imagesURLs
 ) {}
