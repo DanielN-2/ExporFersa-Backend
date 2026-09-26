@@ -1,6 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
-enum ProjectStatus {
+public enum ProjectStatus {
     PENDING,
     APPROVED,
     REJECTED;

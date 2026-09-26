@@ -2,11 +2,14 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.*;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 @Table(name = "tb_project")
 public class Project {
@@ -42,10 +45,10 @@ public class Project {
     @AttributeOverride(name = "value", column = @Column(name = "description", length = 5000))
     private Description description;
 
-    @ElementCollection
-    @CollectionTable(name = "project_images", joinColumns = @JoinColumn(name = "project_id"))
-    @Column(name = "image_path")
-    private List<String> images = new ArrayList<>();
+//    @ElementCollection
+//    @CollectionTable(name = "project_images", joinColumns = @JoinColumn(name = "project_id"))
+//    @Column(name = "image_path")
+//    private List<String> images = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -134,9 +137,9 @@ public class Project {
         }
     }
 
-    void addImages(List<String> newImages) {
-        this.images.addAll(newImages);
-    }
+//    void addImages(List<String> newImages) {
+//        this.images.addAll(newImages);
+//    }
     void updateInfo(
             ProjectName projectName,
             List<Author> authors,
@@ -157,14 +160,22 @@ public class Project {
         if (description != null) this.description = description;
         if (category != null) this.category = category;
     }
-    public Long getId() {return id;}
-    List<String> getImages() {return images;}
-    Event getEvent() {return event;}
-    User getUser() {return user;}
-    ProjectCategory getCategory() {return category;}
-    ProjectName getProjectName() {return projectName;}
-    List<Author> getAuthors() {return List.copyOf(authors);}
-    VideoURL getVideoURL() {return videoURL;}
-    Summary getSummary() {return summary;}
-    Description getDescription() {return description;}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Project other)) {
+            return false;
+        }
+
+        return id != null && id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
 }
