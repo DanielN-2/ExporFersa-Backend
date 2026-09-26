@@ -2,7 +2,6 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -78,5 +77,9 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public User(UUID id) {
+        this.id = id;
     }
 }
