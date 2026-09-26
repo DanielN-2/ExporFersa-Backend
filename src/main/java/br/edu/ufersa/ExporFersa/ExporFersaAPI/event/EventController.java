@@ -5,13 +5,17 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.validation.Valid;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventResponseDTO;
@@ -19,10 +23,11 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
 
 @RestController
 @RequestMapping("/api/v1/events")
+@Validated 
 public class EventController {
 
     @PostMapping
-    public ResponseEntity<EventResponseDTO> CreateEvent(EventCreateDTO evento) {
+    public ResponseEntity<EventResponseDTO> CreateEvent(@RequestBody @Valid EventCreateDTO evento) {
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
@@ -37,7 +42,10 @@ public class EventController {
     } 
 
     @PutMapping("/{eventId}")
-    public ResponseEntity<EventResponseDTO> UpdateEvent(@PathVariable UUID eventId, EventUpdateDTO newEvent) {
+    public ResponseEntity<EventResponseDTO> UpdateEvent(
+        @PathVariable UUID eventId,
+        @RequestBody @Valid EventUpdateDTO newEvent
+    ) {
         return ResponseEntity.ok(null);
     }
 
