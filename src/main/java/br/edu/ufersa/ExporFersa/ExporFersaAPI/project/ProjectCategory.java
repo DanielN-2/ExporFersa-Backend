@@ -1,6 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
-enum ProjectCategory {
+public enum ProjectCategory {
     CIENCIAS_AGRARIAS,
     ENGENHARIA,
     CIENCIAS_HUMANAS,
