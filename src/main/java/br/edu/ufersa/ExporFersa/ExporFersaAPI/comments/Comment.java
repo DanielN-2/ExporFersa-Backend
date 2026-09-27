@@ -3,7 +3,7 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments;
 import java.util.Objects;
 import java.util.UUID;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.Project;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +29,7 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Auth auth;
 
     @Column(nullable = false, length = 300)
     private String commentMessage;
@@ -45,9 +45,9 @@ public class Comment {
         }
     }
 
-    public Comment(Project project, User user, String commentMessage) {
+    public Comment(Project project, Auth auth, String commentMessage) {
         this.project = project;
-        this.user = user;
+        this.auth = auth;
         this.commentMessage = commentMessage;
     }
 
@@ -57,7 +57,7 @@ public class Comment {
 
     @Override
     public int hashCode() {
-        return Objects.hash(project, user, commentMessage);
+        return Objects.hash(project, auth, commentMessage);
     }
 
     @Override
@@ -79,10 +79,10 @@ public class Comment {
                 return false;
         } else if (!project.equals(other.project))
             return false;
-        if (user == null) {
-            if (other.user != null)
+        if (auth == null) {
+            if (other.auth != null)
                 return false;
-        } else if (!user.equals(other.user))
+        } else if (!auth.equals(other.auth))
             return false;
         if (commentMessage == null) {
             if (other.commentMessage != null)
@@ -94,7 +94,7 @@ public class Comment {
 
     public Long getId() { return id; }
     public Project getProject() { return project; }
-    public User getUser() { return user; }
+    public Auth getUser() { return auth; }
     public String getCommentMessage() { return commentMessage; }
 
     public void setCommentMessage(String commentMessage) {

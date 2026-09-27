@@ -1,22 +1,25 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserCreateDTO;
-
+@Service
 public class AuthService {
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+
+    private final AuthRepository authRepository;
+
+    public AuthService(AuthRepository authRepository) {
+        this.authRepository = authRepository;
     }
-    public void register(UserCreateDTO dto) {
-        if(userRepository.findByEmail(dto.email()).isPresent()) {
-            throw new IllegalArgumentException("E-mail já cadastrado no sistema.");
+
+    public void validationNewUser(String email){
+        if (authRepository.existsByEmail(email)){
+            throw new IllegalArgumentException("E-mail ja cadastrado no sistema.");
         }
-        String encryptedPassword = passwordEncoder.encode(dto.senha());
-        User user = new User(dto.username(), dto.email(), encryptedPassword, dto.role());
-        userRepository.save(user);
+    }
+
+    public void validationUpdatePassword(boolean matches) {
+        if (!matches) {
+            throw new IllegalArgumentException("A senha atual informada está incorreta.");
+        }
     }
 }

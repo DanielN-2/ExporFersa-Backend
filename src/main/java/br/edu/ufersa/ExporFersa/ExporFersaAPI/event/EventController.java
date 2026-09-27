@@ -2,6 +2,7 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
 import java.util.List;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
@@ -56,27 +56,27 @@ public class EventController {
     @GetMapping("/{eventId}")
     public ResponseEntity<EventResponseDTO> GetSingleEvent(
         @PathVariable Long eventId,
-        @AuthenticationPrincipal User user
+        @AuthenticationPrincipal Auth auth
     ) {
-        EventResponseDTO response = appService.GetSingleEvent(eventId, user);
+        EventResponseDTO response = appService.GetSingleEvent(eventId, auth);
         return ResponseEntity.ok(response);
     } 
 
     @GetMapping
     public ResponseEntity<List<EventResponseDTO>> ListEvents(
         @RequestParam("category") List<String> eventCategories,
-        @AuthenticationPrincipal User user
+        @AuthenticationPrincipal Auth auth
     ) {
-        List<EventResponseDTO> response = appService.GetEventsByCategories(eventCategories, user);
+        List<EventResponseDTO> response = appService.GetEventsByCategories(eventCategories, auth);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/name")
     public ResponseEntity<List<EventResponseDTO>> ListEventsByName(
         @RequestParam String name,
-        @AuthenticationPrincipal User user
+        @AuthenticationPrincipal Auth auth
     ) {
-        List<EventResponseDTO> response = appService.GetEventsByName(name, user);
+        List<EventResponseDTO> response = appService.GetEventsByName(name, auth);
         return ResponseEntity.ok(response);
     }
 

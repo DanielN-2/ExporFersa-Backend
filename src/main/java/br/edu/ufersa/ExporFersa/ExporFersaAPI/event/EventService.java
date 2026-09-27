@@ -7,8 +7,8 @@ import java.util.Optional;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.UserRole;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.AuthRole;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.DataConflictException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.EntityNotFoundException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
@@ -55,28 +55,28 @@ class EventService {
         return event.get();
     }
 
-    void ValidateAcessEvent(Event event, User user) {
-        if (user == null && event.getCategory() != EventCategory.EXTENSAO) {
+    void ValidateAcessEvent(Event event, Auth auth) {
+        if (auth == null && event.getCategory() != EventCategory.EXTENSAO) {
             throw new AccessDeniedException(null);
         }
     }
 
-    void ValidateAcessListOfEvents(List<Event> events, User user) {
-        if (user == null) {
+    void ValidateAcessListOfEvents(List<Event> events, Auth auth) {
+        if (auth == null) {
             events.removeIf(e -> e.getCategory() != EventCategory.EXTENSAO);
             return;
         }
 
-        UserRole role = user.getRole();
+        AuthRole role = auth.getRole();
         for (var event : events) {
-            if (event.getCategory() != EventCategory.EXTENSAO && role == UserRole.GUEST) {
+            if (event.getCategory() != EventCategory.EXTENSAO && role == AuthRole.GUEST) {
                 events.remove(event);
             }
         }
     }
 
-    void ValidateCategories(List<EventCategory> categories, User user) {
-        if (user == null || user.getRole() != UserRole.GUEST) {
+    void ValidateCategories(List<EventCategory> categories, Auth auth) {
+        if (auth == null || auth.getRole() != AuthRole.GUEST) {
             return;
         }
 

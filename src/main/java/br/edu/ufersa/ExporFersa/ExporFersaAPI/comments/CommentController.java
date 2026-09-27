@@ -3,6 +3,7 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments;
 import java.net.URI;
 import java.util.List;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos.CommentCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos.CommentResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos.CommentUpdateDTO;
@@ -35,11 +35,11 @@ public class CommentController {
 
     @PostMapping()
     public ResponseEntity<CommentResponseDTO> createComment(
-        @AuthenticationPrincipal User authenticatedUser, 
+        @AuthenticationPrincipal Auth authenticatedAuth,
         @PathVariable Long projectId, 
         @RequestBody @Valid CommentCreateDTO dto, UriComponentsBuilder uriBuilder
     ) {
-        CommentResponseDTO newComment = CommentApplicationService.create(dto, projectId, authenticatedUser.getId());
+        CommentResponseDTO newComment = CommentApplicationService.create(dto, projectId, authenticatedAuth.getId());
         URI uri = uriBuilder
                     .path("/api/v1/projects/{projectId}/comments/{commentId}")
                     .buildAndExpand(projectId, newComment.id())
@@ -55,7 +55,7 @@ public class CommentController {
 
     @PutMapping("/{commentId}")
     public ResponseEntity<CommentResponseDTO> updateComment(
-        @AuthenticationPrincipal User authenticatedUser,
+        @AuthenticationPrincipal Auth authenticatedAuth,
         @PathVariable Long commentId,
         @RequestBody CommentUpdateDTO dto,
         UriComponentsBuilder uriBuilder
@@ -70,7 +70,7 @@ public class CommentController {
 
     @DeleteMapping("/{commentId}")
     public ResponseEntity<CommentResponseDTO> deleteComment(
-        @AuthenticationPrincipal User authenticatedUser,
+        @AuthenticationPrincipal Auth authenticatedAuth,
         @PathVariable Long commentId
     ) {
         CommentApplicationService.delete(commentId);

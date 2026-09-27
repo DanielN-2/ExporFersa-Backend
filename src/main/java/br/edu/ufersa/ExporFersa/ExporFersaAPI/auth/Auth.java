@@ -10,6 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,10 +18,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.Project;
 
 @Entity
-@Table(name = "user")
+@Table(name = "auth")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class User implements UserDetails {
+public class Auth implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,14 +30,16 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Setter
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Setter
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
-    private UserRole role;
+    private AuthRole role;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -56,14 +59,14 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == UserRole.ADMIN) {
+        if(this.role == AuthRole.ADMIN) {
 			return List.of(
 				new SimpleGrantedAuthority("ROLE_ADMIN"),
 				new SimpleGrantedAuthority("ROLE_USER"),
 				new SimpleGrantedAuthority("ROLE_GUEST")
 			);
         }
-		if(this.role == UserRole.USER) {
+		if(this.role == AuthRole.USER) {
 			return List.of(
 				new SimpleGrantedAuthority("ROLE_USER"),
 				new SimpleGrantedAuthority("ROLE_GUEST")
@@ -72,14 +75,14 @@ public class User implements UserDetails {
 		return List.of(new SimpleGrantedAuthority("ROLE_GUEST"));
     }
     
-    protected User(String username, String email, String password, UserRole role) {
+    protected Auth(String username, String email, String password, AuthRole role) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public User(UUID id) {
+    public Auth(UUID id) {
         this.id = id;
     }
 }
