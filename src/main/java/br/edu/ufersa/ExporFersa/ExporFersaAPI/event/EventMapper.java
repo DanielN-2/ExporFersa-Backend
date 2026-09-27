@@ -1,16 +1,15 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventCreateDTO;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventResponseDTO;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventCreateDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventResponseDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface EventMapper {

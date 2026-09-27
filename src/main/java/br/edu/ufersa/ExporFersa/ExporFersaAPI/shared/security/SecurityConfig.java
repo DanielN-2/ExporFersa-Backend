@@ -15,8 +15,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration 
-@EnableWebSecurity 
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final SecurityFilter securityFilter;
@@ -32,6 +32,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(req -> {
                 req.requestMatchers(HttpMethod.POST, "/api/v1/user/login").permitAll();
                 req.requestMatchers(HttpMethod.POST, "/api/v1/user").permitAll();
+                req.requestMatchers(HttpMethod.GET,"/api/v1/projects").permitAll();
+                req.requestMatchers(HttpMethod.GET, "/api/v1/projects/{projectId}").permitAll();
+                req.requestMatchers(HttpMethod.GET, "/api/v1/events/{eventId}/projects").permitAll();
                 req.requestMatchers(HttpMethod.GET, "/api/v1/user").hasRole("ADMIN");
                 req.anyRequest().authenticated();
             })
