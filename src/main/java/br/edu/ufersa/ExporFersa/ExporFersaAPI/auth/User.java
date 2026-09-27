@@ -78,4 +78,8 @@ public class User implements UserDetails {
         this.password = password;
         this.role = role;
     }
+
+    public User(UUID id) {
+        this.id = id;
+    }
 }
