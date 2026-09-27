@@ -7,11 +7,11 @@ import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public record ProjectPatchDTO(
-        String nomeProjeto,
+        String projectName,
 
         List<@NotBlank(
                 message = "O nome dos autores não pode ser vazio!"
-        ) String> autores,
+        ) String> authors,
 
         @Pattern(
                 regexp = "^https?://.+",
@@ -23,12 +23,12 @@ public record ProjectPatchDTO(
                 max = 1000,
                 message = "O resumo não pode possuir mais de 1000 caracteres!"
         )
-        String resumo,
+        String summary,
 
         @Size(
                 max = 5000,
                 message = "A descrição não pode possuir mais de 5000 caracteres!"
         )
-        String descricao
+        String description
 ) {
 }

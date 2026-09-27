@@ -3,6 +3,7 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.*;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -140,25 +141,20 @@ public class Project {
 //    void addImages(List<String> newImages) {
 //        this.images.addAll(newImages);
 //    }
-    void updateInfo(
-            ProjectName projectName,
-            List<Author> authors,
-            VideoURL videoURL,
-            Summary summary,
-            Description description,
-            ProjectCategory category
-    ) {
+
+    public void ensureCanUpdate() {
         if (status != ProjectStatus.PENDING) {
-            throw new IllegalStateException(
-                    "Apenas projetos pendentes podem ser atualizados!"
+            throw new InvalidOperationException(
+                    "Apenas projetos pendentes podem ser alterados."
             );
         }
-        if (projectName != null) this.projectName = projectName;
-        if (authors != null) this.authors = new ArrayList<>(authors);
-        if (videoURL != null) this.videoURL = videoURL;
-        if (summary != null) this.summary = summary;
-        if (description != null) this.description = description;
-        if (category != null) this.category = category;
+    }
+    public void ensureCanDelete() {
+        if (status == ProjectStatus.APPROVED) {
+            throw new InvalidOperationException(
+                    "Projetos aprovados não podem ser excluídos."
+            );
+        }
     }
     @Override
     public boolean equals(Object o) {
