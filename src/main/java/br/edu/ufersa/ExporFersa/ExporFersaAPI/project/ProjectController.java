@@ -1,6 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.*;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +27,7 @@ public class ProjectController {
     public ResponseEntity<ProjectResponseDTO> create(
             @RequestBody @Valid ProjectCreateDTO projeto,
             @PathVariable Long eventId,
-            @AuthenticationPrincipal User user,
+            @AuthenticationPrincipal Auth user,
             UriComponentsBuilder uriBuilder
     ) {
         ProjectResponseDTO createdProject = service.create(projeto, eventId, user);
@@ -58,7 +58,7 @@ public class ProjectController {
     @PreAuthorize("hasRole('USER')")
     @GetMapping("/projects/mine")
     public ResponseEntity<List<ProjectResponseDTO>> listMyProjects(
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Auth user
     ) {
         return ResponseEntity.ok(service.getMyProjects(user));
     }
@@ -82,7 +82,7 @@ public class ProjectController {
     public ResponseEntity<ProjectResponseDTO> update(
             @PathVariable Long projectId,
             @RequestBody @Valid ProjectPatchDTO dto,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Auth user
     ) {
         return ResponseEntity.ok(service.update(projectId, dto, user));
     }
@@ -101,7 +101,7 @@ public class ProjectController {
     @DeleteMapping("/{projectId}")
     public ResponseEntity<Void> delete(
             @PathVariable Long projectId,
-            @AuthenticationPrincipal User user
+            @AuthenticationPrincipal Auth user
     ) {
         service.delete(projectId, user);
         return ResponseEntity.noContent().build();

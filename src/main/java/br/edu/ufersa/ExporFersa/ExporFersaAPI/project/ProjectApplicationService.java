@@ -1,6 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.EventInternalApi;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.*;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.ProjectName;
@@ -53,9 +53,9 @@ class ProjectApplicationService {
         return mapper.toResponseList(projects);
     }
     @Transactional(readOnly = true)
-    public List<ProjectResponseDTO> getMyProjects(User user) {
+    public List<ProjectResponseDTO> getMyProjects(Auth user) {
         return mapper.toResponseList(
-                repository.findAllByUserId(user.getId())
+                repository.findAllByAuthId(user.getId())
         );
     }
 
@@ -70,7 +70,7 @@ class ProjectApplicationService {
     public ProjectResponseDTO create(
             ProjectCreateDTO dto,
             Long eventId,
-            User user
+            Auth  user
     ) {
         Project newProject = mapper.toEntity(dto, eventId, user.getId());
         eventApi.findById(newProject.getEvent().getId());
@@ -86,14 +86,14 @@ class ProjectApplicationService {
     public ProjectResponseDTO update(
             Long projectId,
             ProjectPatchDTO dto,
-            User user
+            Auth user
     ) {
         Project project = repository.findById(projectId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Projeto não encontrado."
                 ));
 
-        if (!project.getUser().getId().equals(user.getId())) {
+        if (!project.getAuth().getId().equals(user.getId())) {
             throw new AccessDeniedException(
                     "Você não possui permissão para alterar este projeto."
             );
@@ -132,13 +132,13 @@ class ProjectApplicationService {
         }
     }
     @Transactional
-    public void delete(Long projectId, User user) {
+    public void delete(Long projectId, Auth user) {
         Project project = repository.findById(projectId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Projeto não encontrado."
                 ));
 
-        if (!project.getUser().getId().equals(user.getId())) {
+        if (!project.getAuth().getId().equals(user.getId())) {
             throw new AccessDeniedException(
                     "Você não possui permissão para excluir este projeto."
             );

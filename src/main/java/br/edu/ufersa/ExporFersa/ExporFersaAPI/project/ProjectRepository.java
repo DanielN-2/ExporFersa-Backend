@@ -15,7 +15,7 @@ interface ProjectRepository extends JpaRepository<Project, Long>{
     );
     List<Project> findAllByStatus(ProjectStatus status);
 
-    List<Project> findAllByUserId(UUID userId);
+    List<Project> findAllByAuthId(UUID authId);
 
     List<Project> findAllByCategory(ProjectCategory category);
 

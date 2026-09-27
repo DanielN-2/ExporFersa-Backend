@@ -1,6 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectPatchDTO;
@@ -27,10 +27,10 @@ interface ProjectMapper {
 
         return new Event(eventId);
     }
-    default User mapUser(UUID userId) {
+    default Auth mapUser(UUID userId) {
         if (userId == null) return null;
 
-        return new User(userId);
+        return new Auth(userId);
     }
     default ProjectName mapProjectName(String value) {
         return value == null ? null : new ProjectName(value);
