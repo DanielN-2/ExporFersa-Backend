@@ -22,4 +22,8 @@ public record OperatingDate(
             throw new IllegalArgumentException("A data de inicio deve anteceder a data de encerramento.");
         }
     }
+
+    public boolean inBetween(LocalDate date) {
+       return (startDate.isAfter(date) && endDate.isBefore(date));
+    }
 }
