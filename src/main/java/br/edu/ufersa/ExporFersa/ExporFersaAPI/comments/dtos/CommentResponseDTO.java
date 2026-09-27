@@ -1,6 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.Comment;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.Project;
 import jakarta.validation.constraints.NotBlank;
@@ -15,7 +15,7 @@ public record CommentResponseDTO(
     Project project,
 
     @NotNull(message = "O comentário precisa estar ligado a um usuário")
-    User user,
+    Auth auth,
 
     @NotBlank(message = "O comentário não pode ser vazio")
     @Size(max = 250, min = 1, message = "O comentário precisa ter entre 1 e 250 caracteres")

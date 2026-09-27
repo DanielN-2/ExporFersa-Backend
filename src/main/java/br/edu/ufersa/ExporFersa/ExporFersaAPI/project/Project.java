@@ -1,6 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.*;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
@@ -24,7 +24,7 @@ public class Project {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private Auth auth;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "project_name"))
@@ -71,7 +71,7 @@ public class Project {
             Description description,
             ProjectCategory category,
             Event event,
-            User user
+            Auth auth
     ) {
         validateInvariants(
                 projectName,
@@ -81,7 +81,7 @@ public class Project {
                 description,
                 category,
                 event,
-                user
+                auth
         );
         this.projectName = projectName;
         this.authors = new ArrayList<>(authors);
@@ -90,7 +90,7 @@ public class Project {
         this.description = description;
         this.category = category;
         this.event = event;
-        this.user = user;
+        this.auth = auth;
         this.status = ProjectStatus.PENDING;
     }
 
@@ -106,7 +106,7 @@ public class Project {
             Description description,
             ProjectCategory category,
             Event event,
-            User user
+            Auth auth
     ) {
         if (projectName == null) throw new IllegalArgumentException("O nome do projeto é obrigatório.");
         if (authors == null || authors.isEmpty())
@@ -116,7 +116,7 @@ public class Project {
         if (description == null) throw new IllegalArgumentException("A descrição é obrigatória.");
         if (category == null) throw new IllegalArgumentException("A categoria é obrigatória.");
         if (event == null) throw new IllegalArgumentException("O evento é obrigatório.");
-        if (user == null) throw new IllegalArgumentException("O usuário é obrigatório.");
+        if (auth == null) throw new IllegalArgumentException("O usuário é obrigatório.");
     }
 
     void approve() {

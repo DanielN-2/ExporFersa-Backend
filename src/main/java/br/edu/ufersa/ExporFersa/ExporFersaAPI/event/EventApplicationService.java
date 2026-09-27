@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.User;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
@@ -49,24 +49,24 @@ class EventApplicationService {
     }
 
     @Transactional 
-    EventResponseDTO GetSingleEvent(Long id, User user) {
+    EventResponseDTO GetSingleEvent(Long id, Auth auth) {
         Event event = service.ValidateEvent(repository.findById(id));
-        service.ValidateAcessEvent(event, user);
+        service.ValidateAcessEvent(event, auth);
         return mapper.toResponseDTO(event);
     }
 
     @Transactional 
-    List<EventResponseDTO> GetEventsByCategories(List<String> categories, User user) {
+    List<EventResponseDTO> GetEventsByCategories(List<String> categories, Auth auth) {
         List<EventCategory> categoriesMapped = mapper.toCategories(categories);
-        service.ValidateCategories(categoriesMapped, user);
+        service.ValidateCategories(categoriesMapped, auth);
         List<Event> events = repository.findByCategories(categoriesMapped);
         return mapper.toListResponseDTOs(events);
     }
 
     @Transactional 
-    List<EventResponseDTO> GetEventsByName(String name, User user) {
+    List<EventResponseDTO> GetEventsByName(String name, Auth auth) {
         List<Event> events = repository.findByNameContainingIgnoreCase(name);
-        service.ValidateAcessListOfEvents(events, user);
+        service.ValidateAcessListOfEvents(events, auth);
         return mapper.toListResponseDTOs(events);
     }
 

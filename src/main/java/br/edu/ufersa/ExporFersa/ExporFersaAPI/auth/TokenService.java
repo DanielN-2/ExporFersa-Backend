@@ -14,12 +14,12 @@ public class TokenService {
     
     @Value("${api.security.token.secret}")
     private String secret;
-    public String generateToken(User user) {
+    public String generateToken(Auth auth) {
         Algorithm algorithm = Algorithm.HMAC256(secret);
         return JWT.create()
                     .withIssuer("ExporFersaAPI")
-                    .withSubject(user.getEmail())
-                    .withClaim("role", user.getRole().name())
+                    .withSubject(auth.getEmail())
+                    .withClaim("role", auth.getRole().name())
                     .withExpiresAt(Instant.now().plus(15, ChronoUnit.MINUTES))
                     .sign(algorithm);
     }
