@@ -1,24 +1,11 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import jakarta.persistence.AttributeOverride;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Table;
-
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.OpeningHours;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.OperatingDate;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity 
@@ -58,7 +45,9 @@ public class Event {
         this.operatingDate = dates;
         this.openingHours = hours;
     }
-
+    public Event(Long id) {
+        this.id = id;
+    }
     private Event(
         Long id,
         String name,

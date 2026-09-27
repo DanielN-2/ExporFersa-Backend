@@ -1,35 +1,36 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos;
 
+import jakarta.validation.constraints.*;
+
 import java.util.List;
-import java.util.UUID;
 
 public record ProjectResponseDTO(
-        UUID id,
-        String nomeProjeto,
-        List<String> autores,
+        @NotNull(message = "O ID é obrigatório!")
+        Long id,
+
+        @NotBlank(message = "O nome do projeto é obrigatório!")
+        String projectName,
+
+        @NotEmpty(message = "O projeto deve possuir pelo menos um autor!")
+        List<@NotBlank(message = "O nome dos autores não pode ser vazio!") String> autores,
+
+        @NotBlank(message = "A URL do vídeo é obrigatória!")
+        @Pattern(
+                regexp = "^https?://.+",
+                message = "A URL do vídeo deve ser um link válido!"
+        )
         String videoURL,
-        String resumo,
-        String descricao
+
+        @NotBlank(message = "O resumo é obrigatório!")
+        @Size(max = 1000, message = "O resumo não pode possuir mais de 1000 caracteres!")
+        String summary,
+
+        @NotBlank(message = "A descrição é obrigatória!")
+        @Size(max = 5000, message = "A descrição não pode possuir mais de 5000 caracteres!")
+        String description,
+
+        @NotNull(message = "A categoria é obrigatória!")
+        ProjectCategoryDTO category
 ) {
-    public ProjectResponseDTO {
-        if(id == null)
-            throw new IllegalArgumentException("O ID é obrigatório!");
-        if(nomeProjeto == null || nomeProjeto.isBlank() )
-            throw new IllegalArgumentException("O nome do projeto é obrigatório");
-
-        if (autores.stream().anyMatch(autor -> autor == null || autor.isBlank())) {
-            throw new IllegalArgumentException("O nome dos autores não pode ser vazio!");
-        }
-        if (videoURL == null || videoURL.isBlank()) {
-            throw new IllegalArgumentException("A URL do vídeo é obrigatória!");
-        }
-
-        if (resumo == null || resumo.isBlank()) {
-            throw new IllegalArgumentException("O resumo é obrigatório!");
-        }
-
-        if (descricao == null || descricao.isBlank()) {
-            throw new IllegalArgumentException("A descrição é obrigatória!");
-        }
-    }
 }
+

@@ -2,11 +2,15 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.*;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
 import jakarta.persistence.*;
+import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 @Entity
 @Table(name = "tb_project")
 public class Project {
@@ -42,10 +46,10 @@ public class Project {
     @AttributeOverride(name = "value", column = @Column(name = "description", length = 5000))
     private Description description;
 
-    @ElementCollection
-    @CollectionTable(name = "project_images", joinColumns = @JoinColumn(name = "project_id"))
-    @Column(name = "image_path")
-    private List<String> images = new ArrayList<>();
+//    @ElementCollection
+//    @CollectionTable(name = "project_images", joinColumns = @JoinColumn(name = "project_id"))
+//    @Column(name = "image_path")
+//    private List<String> images = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -134,37 +138,40 @@ public class Project {
         }
     }
 
-    void addImages(List<String> newImages) {
-        this.images.addAll(newImages);
-    }
-    void updateInfo(
-            ProjectName projectName,
-            List<Author> authors,
-            VideoURL videoURL,
-            Summary summary,
-            Description description,
-            ProjectCategory category
-    ) {
+//    void addImages(List<String> newImages) {
+//        this.images.addAll(newImages);
+//    }
+
+    public void ensureCanUpdate() {
         if (status != ProjectStatus.PENDING) {
-            throw new IllegalStateException(
-                    "Apenas projetos pendentes podem ser atualizados!"
+            throw new InvalidOperationException(
+                    "Apenas projetos pendentes podem ser alterados."
             );
         }
-        if (projectName != null) this.projectName = projectName;
-        if (authors != null) this.authors = new ArrayList<>(authors);
-        if (videoURL != null) this.videoURL = videoURL;
-        if (summary != null) this.summary = summary;
-        if (description != null) this.description = description;
-        if (category != null) this.category = category;
     }
-    public Long getId() {return id;}
-    List<String> getImages() {return images;}
-    Event getEvent() {return event;}
-    Auth getUser() {return auth;}
-    ProjectCategory getCategory() {return category;}
-    ProjectName getProjectName() {return projectName;}
-    List<Author> getAuthors() {return List.copyOf(authors);}
-    VideoURL getVideoURL() {return videoURL;}
-    Summary getSummary() {return summary;}
-    Description getDescription() {return description;}
+    public void ensureCanDelete() {
+        if (status == ProjectStatus.APPROVED) {
+            throw new InvalidOperationException(
+                    "Projetos aprovados não podem ser excluídos."
+            );
+        }
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Project other)) {
+            return false;
+        }
+
+        return id != null && id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
 }
