@@ -57,7 +57,7 @@ public class AuthApplicationService {
     @Transactional
     public void deleteUser(UUID id) {
         if (!authRepository.existsById(id)) {
-            throw new IllegalArgumentException("Usuário não encontrado.");
+            throw new EntityNotFoundException("Usuário não encontrado.");
         }
         authRepository.deleteById(id);
     }
@@ -75,6 +75,6 @@ public class AuthApplicationService {
 
     private Auth getAuthOrThrow(UUID id) {
         return authRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado."));
     }
 }
