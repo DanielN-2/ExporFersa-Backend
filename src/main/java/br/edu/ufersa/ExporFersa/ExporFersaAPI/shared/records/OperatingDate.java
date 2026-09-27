@@ -1,7 +1,10 @@
-package br.edu.ufersa.ExporFersa.ExporFersaAPI.event.records;
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable 
 public record OperatingDate(
     LocalDate startDate,
     LocalDate endDate
@@ -18,5 +21,9 @@ public record OperatingDate(
         if (startDate.isAfter(endDate)) {
             throw new IllegalArgumentException("A data de inicio deve anteceder a data de encerramento.");
         }
+    }
+
+    public boolean inBetween(LocalDate date) {
+       return (startDate.isAfter(date) && endDate.isBefore(date));
     }
 }
