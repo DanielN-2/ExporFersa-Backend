@@ -26,7 +26,7 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.OperatingDate;
 public class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
@@ -53,22 +53,26 @@ public class Event {
     protected Event(){}
 
     public Event(String name, EventCategory category, OperatingDate dates, OpeningHours hours) {
-        if (name == null || category == null || dates == null || hours == null) {
-            throw new IllegalArgumentException("Nenhum campo pode ser nulo.");
-        }
-
-        if (name.isBlank()) {
-            throw new IllegalArgumentException("O nome não pode ser vazio.");
-        }
-
-        if (name.length() < 3 || name.length() > 255) {
-            throw new IllegalArgumentException("O nome deve possuir de 3 a 255 caractere.s");
-        }
-
         this.name = name;
         this.category = category;
         this.operatingDate = dates;
         this.openingHours = hours;
+    }
+
+    private Event(
+        Long id,
+        String name,
+        EventCategory category,
+        OperatingDate dates,
+        OpeningHours hours,
+        List<String> imagesURLs
+    ) {
+        this.id = id;
+        this.name = name;
+        this.category = category;
+        this.operatingDate = dates;
+        this.openingHours = hours;
+        this.imagesURLs = imagesURLs;
     }
 
     public Long getId() { return this.id; }
@@ -77,6 +81,10 @@ public class Event {
     public OperatingDate getOperatingDates() { return this.operatingDate; }
     public OpeningHours getOpeningHours() { return this.openingHours; }
     public List<String> getImagesURLs() { return List.copyOf(imagesURLs); }
+
+    public Event getCopy() {
+        return new Event(id, name, category, operatingDate, openingHours, imagesURLs);
+    }
      
     @Override
     public boolean equals(Object obj) {
