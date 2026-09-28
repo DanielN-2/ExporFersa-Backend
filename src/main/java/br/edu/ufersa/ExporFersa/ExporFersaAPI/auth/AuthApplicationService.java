@@ -51,7 +51,9 @@ public class AuthApplicationService {
     @Transactional
     public UserResponseDTO updateUser(UUID id, UserUpdateDTO dto) {
         Auth auth = getAuthOrThrow(id);
-        auth.setUsername(dto.username());
+
+        mapper.updateUserFromDTO(dto, auth);
+
         return mapper.toResponseDTO(authRepository.save(auth));
     }
 
@@ -70,7 +72,9 @@ public class AuthApplicationService {
         boolean matches = passwordEncoder.matches(dto.oldPassword(), auth.getPassword());
         domainService.validationUpdatePassword(matches);
 
-        auth.setPassword(passwordEncoder.encode(dto.newPassword()));
+        String encodePassword = passwordEncoder.encode(dto.newPassword());
+        mapper.updateUserPassword(encodePassword, auth);
+
         authRepository.save(auth);
     }
 
