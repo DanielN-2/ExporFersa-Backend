@@ -1,13 +1,15 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments;
 
-import java.util.List;
-import java.util.UUID;
-
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos.CommentCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos.CommentResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos.CommentUpdateDTO;
 import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+
+@Service
 public class CommentApplicationService {
     private final CommentService commentService;
     private final CommentRepository commentRepository;

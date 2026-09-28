@@ -5,12 +5,11 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.*;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
 import jakarta.persistence.*;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
+
 @Entity
 @Table(name = "tb_project")
 public class Project {
@@ -156,6 +155,16 @@ public class Project {
             );
         }
     }
+    public Long getId() {return id;}
+    public Event getEvent() {return event;}
+    public Auth getAuth() {return auth;}
+    public ProjectName getProjectName() {return projectName;}
+    public List<Author> getAuthors() {return authors;}
+    public VideoURL getVideoURL() {return videoURL;}
+    public Summary getSummary() {return summary;}
+    public Description getDescription() {return description;}
+    public ProjectStatus getStatus() {return status;}
+    public ProjectCategory getCategory() {return category;}
     @Override
     public boolean equals(Object o) {
         if (this == o) {
