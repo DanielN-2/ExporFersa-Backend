@@ -27,8 +27,10 @@ public class CommentApplicationService {
 
     @Transactional 
     public CommentResponseDTO create(CommentCreateDTO dto, Long projectId, UUID userId) {
-        Comment newComment = commentMapper.toEntity(dto, projectId, userId);
-        return commentMapper.toResponse(commentRepository.save(newComment));
+        Comment newComment = commentService.create(commentMapper.toEntity(dto, projectId, userId));
+        Comment saved = commentRepository.save(newComment);
+        CommentResponseDTO mapped = commentMapper.toResponse(saved);
+        return mapped;
     }
 
     public List<CommentResponseDTO> list(Long projectId) {

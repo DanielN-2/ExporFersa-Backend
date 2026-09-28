@@ -63,7 +63,7 @@ public class CommentController {
         CommentResponseDTO updated = CommentApplicationService.update(commentId, dto);
         URI uri = uriBuilder
                     .path("/api/v1/projects/{projectId}/comments/{commentId}")
-                    .buildAndExpand(updated.project().getId(), commentId)
+                    .buildAndExpand(updated.projectId(), commentId)
                     .toUri();
         return ResponseEntity.created(uri).body(updated);
     }

@@ -22,7 +22,10 @@ public interface CommentMapper {
         return comment;
     }
 
-    CommentResponseDTO toResponse(Comment entity);
+    default CommentResponseDTO toResponse(Comment entity) {
+        CommentResponseDTO response = new CommentResponseDTO(entity.getId(), entity.getProject().getId(), entity.getAuth().getId(), entity.getCommentMessage());
+        return response;
+    }
 
     List<CommentResponseDTO> toResponseList(List<Comment> entities);
 

@@ -1,5 +1,7 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos;
 
+import java.util.UUID;
+
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.Comment;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.Project;
@@ -12,10 +14,10 @@ public record CommentResponseDTO(
     Long id,
 
     @NotNull(message = "O comentário precisa estar ligado a um projeto")
-    Project project,
+    Long projectId,
 
     @NotNull(message = "O comentário precisa estar ligado a um usuário")
-    Auth auth,
+    UUID authId,
 
     @NotBlank(message = "O comentário não pode ser vazio")
     @Size(max = 250, min = 1, message = "O comentário precisa ter entre 1 e 250 caracteres")
@@ -25,8 +27,8 @@ public record CommentResponseDTO(
         if(comment == null) return null;
         return new CommentResponseDTO(
             comment.getId(),
-            comment.getProject(),
-            comment.getAuth(),
+            comment.getProject().getId(),
+            comment.getAuth().getId(),
             comment.getCommentMessage()
         );
     }
