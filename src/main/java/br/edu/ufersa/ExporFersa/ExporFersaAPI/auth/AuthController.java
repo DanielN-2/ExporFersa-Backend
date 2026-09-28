@@ -37,7 +37,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDTO> logarUsuario(@RequestBody @Valid UserLoginDTO loginDto) {
         System.out.println(">>> CHEGOU NO LOGIN");
-        var authToken = new UsernamePasswordAuthenticationToken(loginDto.email(), loginDto.senha());
+        var authToken = new UsernamePasswordAuthenticationToken(loginDto.email(), loginDto.password());
         var authentication = authenticationManager.authenticate(authToken);
         String token = tokenService.generateToken((Auth) authentication.getPrincipal());
         return ResponseEntity.ok(new TokenResponseDTO(token));

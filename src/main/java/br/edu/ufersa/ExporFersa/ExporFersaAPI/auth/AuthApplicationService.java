@@ -67,10 +67,10 @@ public class AuthApplicationService {
     public void updatePassword(UUID id, UserPasswordUpdateDTO dto) {
         Auth auth = getAuthOrThrow(id);
 
-        boolean matches = passwordEncoder.matches(dto.senhaAntiga(), auth.getPassword());
+        boolean matches = passwordEncoder.matches(dto.oldPassword(), auth.getPassword());
         domainService.validationUpdatePassword(matches);
 
-        auth.setPassword(passwordEncoder.encode(dto.senhaNova()));
+        auth.setPassword(passwordEncoder.encode(dto.newPassword()));
         authRepository.save(auth);
     }
 

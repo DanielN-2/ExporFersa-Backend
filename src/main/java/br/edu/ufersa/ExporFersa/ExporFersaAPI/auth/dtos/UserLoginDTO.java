@@ -10,5 +10,5 @@ public record UserLoginDTO (
         String email,
 
         @NotBlank(message = "A senha é obrigatória")
-        String senha
+        String password
 ) {}

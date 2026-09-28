@@ -17,6 +17,7 @@ public interface EventMapper {
     default Event toEntity(EventCreateDTO dto) {
         return new Event(dto.name(), dto.category(), dto.dates(), dto.hours());
     }
+    
     @Mapping(target = "dates", source = "operatingDates")
     @Mapping(target = "hours", source = "openingHours")
     EventResponseDTO toResponseDTO(Event entity);
