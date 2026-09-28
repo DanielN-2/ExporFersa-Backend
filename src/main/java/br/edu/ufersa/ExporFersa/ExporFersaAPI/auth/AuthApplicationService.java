@@ -4,10 +4,11 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserPasswordUpdateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserUpdateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.EntityNotFoundException;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserCreateDTO;
+
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserCreateDTO;
 
 import java.util.List;
 import java.util.UUID;
