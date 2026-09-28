@@ -38,13 +38,13 @@ public class CommentApplicationService {
         return commentMapper.toResponseList(list);
     }
 
-    public CommentResponseDTO update(Long commentId, CommentUpdateDTO dto) {
-        Comment updated = commentService.validateUpdate(commentId, dto.commentMessage());
+    public CommentResponseDTO update(Long commentId, CommentUpdateDTO dto, UUID userId) {
+        Comment updated = commentService.validateUpdate(commentId, dto.commentMessage(), userId);
         return commentMapper.toResponse(commentRepository.save(updated));
     }
 
-    public void delete(Long commentId) {
-        Comment toDelete = commentService.delete(commentId);
+    public void delete(Long commentId, UUID userId) {
+        Comment toDelete = commentService.delete(commentId, userId);
         commentRepository.delete(toDelete);
     }
 }

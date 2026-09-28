@@ -2,7 +2,6 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.AuthRepository;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos.CommentCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.Project;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.ProjectRepository;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
@@ -32,16 +31,18 @@ public class CommentService {
         return new Comment(projectExists.get(), userExists.get(), comment.getCommentMessage());
     }
 
-    public Comment validateUpdate(Long id, String message) {
+    public Comment validateUpdate(Long id, String message, UUID userId) {
         Comment stored = commentRepository.getReferenceById(id);
         if(stored == null) throw new InvalidOperationException("O comentário não existe.");
+        if(!stored.getAuth().getId().equals(userId)) throw new InvalidOperationException("Credenciais de usuário incorretas.");
         stored.setCommentMessage(message);
         return stored;
     }
 
-    public Comment delete(Long id) {
+    public Comment delete(Long id, UUID userId) {
         Comment stored = commentRepository.getReferenceById(id);
         if(stored == null) throw new InvalidOperationException("O comentário não existe.");
+        if(!stored.getAuth().getId().equals(userId)) throw new InvalidOperationException("Credenciais de usuário incorretas.");
         return stored;
     }
 }

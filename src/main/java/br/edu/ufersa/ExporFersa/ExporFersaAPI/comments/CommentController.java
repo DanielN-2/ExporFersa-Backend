@@ -60,7 +60,7 @@ public class CommentController {
         @RequestBody CommentUpdateDTO dto,
         UriComponentsBuilder uriBuilder
     ) {
-        CommentResponseDTO updated = CommentApplicationService.update(commentId, dto);
+        CommentResponseDTO updated = CommentApplicationService.update(commentId, dto, authenticatedAuth.getId());
         URI uri = uriBuilder
                     .path("/api/v1/projects/{projectId}/comments/{commentId}")
                     .buildAndExpand(updated.projectId(), commentId)
@@ -73,7 +73,7 @@ public class CommentController {
         @AuthenticationPrincipal Auth authenticatedAuth,
         @PathVariable Long commentId
     ) {
-        CommentApplicationService.delete(commentId);
+        CommentApplicationService.delete(commentId, authenticatedAuth.getId());
         return ResponseEntity.noContent().build();
     }
 }
