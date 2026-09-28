@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -67,6 +68,16 @@ public class GlobalExceptionHandler {
                 "O corpo da requisição contém dados inválidos."
         );
         problem.setTitle("Requisição Inválida");
+        problem.setProperty("timestamp", Instant.now());
+        return problem;
+    }
+    @ExceptionHandler(BadCredentialsException.class)
+    public ProblemDetail handleInvalidLoginCredentials(BadCredentialsException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+                HttpStatus.BAD_REQUEST,
+                "Usuário inexistente ou senha inválida."
+        );
+        problem.setTitle("Credenciais Inválidas");
         problem.setProperty("timestamp", Instant.now());
         return problem;
     }

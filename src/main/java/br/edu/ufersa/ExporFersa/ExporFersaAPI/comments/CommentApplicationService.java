@@ -27,8 +27,10 @@ public class CommentApplicationService {
 
     @Transactional 
     public CommentResponseDTO create(CommentCreateDTO dto, Long projectId, UUID userId) {
-        Comment newComment = commentMapper.toEntity(dto, projectId, userId);
-        return commentMapper.toResponse(commentRepository.save(newComment));
+        Comment newComment = commentService.create(commentMapper.toEntity(dto, projectId, userId));
+        Comment saved = commentRepository.save(newComment);
+        CommentResponseDTO mapped = commentMapper.toResponse(saved);
+        return mapped;
     }
 
     public List<CommentResponseDTO> list(Long projectId) {
@@ -36,13 +38,13 @@ public class CommentApplicationService {
         return commentMapper.toResponseList(list);
     }
 
-    public CommentResponseDTO update(Long commentId, CommentUpdateDTO dto) {
-        Comment updated = commentService.validateUpdate(commentId, dto.commentMessage());
+    public CommentResponseDTO update(Long commentId, CommentUpdateDTO dto, UUID userId) {
+        Comment updated = commentService.validateUpdate(commentId, dto.commentMessage(), userId);
         return commentMapper.toResponse(commentRepository.save(updated));
     }
 
-    public void delete(Long commentId) {
-        Comment toDelete = commentService.delete(commentId);
+    public void delete(Long commentId, UUID userId) {
+        Comment toDelete = commentService.delete(commentId, userId);
         commentRepository.delete(toDelete);
     }
 }
