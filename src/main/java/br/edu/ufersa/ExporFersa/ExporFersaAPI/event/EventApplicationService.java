@@ -4,7 +4,9 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
+
 import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -55,9 +57,17 @@ class EventApplicationService {
 
     @Transactional 
     List<EventResponseDTO> GetEventsByCategories(List<String> categories, Auth auth) {
-        List<EventCategory> categoriesMapped = mapper.toCategories(categories);
-        service.ValidateCategories(categoriesMapped, auth);
-        List<Event> events = repository.findByCategoryIn(categoriesMapped);
+        List<Event> events;
+
+        if (categories == null) {
+            events = repository.findAll();
+            service.ValidateAcessListOfEvents(events, auth);
+        } else {
+            List<EventCategory> categoriesMapped = mapper.toCategories(categories);
+            service.ValidateCategories(categoriesMapped, auth);
+            events = repository.findByCategoryIn(categoriesMapped);
+        }
+
         return mapper.toListResponseDTOs(events);
     }
 

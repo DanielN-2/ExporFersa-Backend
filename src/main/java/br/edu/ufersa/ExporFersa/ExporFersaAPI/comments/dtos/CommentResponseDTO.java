@@ -2,9 +2,7 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos;
 
 import java.util.UUID;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.Comment;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.Project;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

@@ -56,33 +56,27 @@ class EventService {
     }
 
     void ValidateAcessEvent(Event event, Auth auth) {
-        if (auth == null && event.getCategory() != EventCategory.EXTENSAO) {
-            throw new AccessDeniedException(null);
+        boolean isGuest = (auth == null || auth.getRole() == AuthRole.GUEST);
+        if (isGuest && event.getCategory() != EventCategory.EXTENSAO) {
+            throw new AccessDeniedException(
+                "Para acessar eventos de ensino ou pesquisa é necessário estar associado à universidade."
+            );
         }
     }
 
     void ValidateAcessListOfEvents(List<Event> events, Auth auth) {
-        if (auth == null) {
+        if (auth == null || auth.getRole() == AuthRole.GUEST) {
             events.removeIf(e -> e.getCategory() != EventCategory.EXTENSAO);
-            return;
-        }
-
-        AuthRole role = auth.getRole();
-        for (var event : events) {
-            if (event.getCategory() != EventCategory.EXTENSAO && role == AuthRole.GUEST) {
-                events.remove(event);
-            }
         }
     }
 
     void ValidateCategories(List<EventCategory> categories, Auth auth) {
-        if (auth == null || auth.getRole() != AuthRole.GUEST) {
-            return;
-        }
+        boolean isGuest = (auth == null || auth.getRole() == AuthRole.GUEST);
+        boolean hasUniversityOnlyContent = categories.size() > 1 || categories.getFirst() != EventCategory.EXTENSAO;
 
-        if (categories.contains(EventCategory.ENSINO) || categories.contains(EventCategory.PESQUISA)) {
+        if (isGuest && hasUniversityOnlyContent) {
             throw new AccessDeniedException(
-                "Para acessar eventos de ensino ou pesquisa é necessário estar associado à universiade"
+                "Para acessar eventos de ensino ou pesquisa é necessário estar associado à universidade."
             );
         }
     }
