@@ -1,13 +1,12 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -37,7 +36,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<TokenResponseDTO> logarUsuario(@RequestBody @Valid UserLoginDTO loginDto) {
-        var authToken = new UsernamePasswordAuthenticationToken(loginDto.username(), loginDto.senha());
+        System.out.println(">>> CHEGOU NO LOGIN");
+        var authToken = new UsernamePasswordAuthenticationToken(loginDto.email(), loginDto.senha());
         var authentication = authenticationManager.authenticate(authToken);
         String token = tokenService.generateToken((Auth) authentication.getPrincipal());
         return ResponseEntity.ok(new TokenResponseDTO(token));
@@ -69,4 +69,5 @@ public class AuthController {
         authApplicationService.updatePassword(id, dto);
         return ResponseEntity.noContent().build();
     }
+
 }

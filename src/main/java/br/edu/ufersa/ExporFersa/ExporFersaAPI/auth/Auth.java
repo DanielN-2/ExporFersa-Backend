@@ -2,8 +2,6 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.Project;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +13,6 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "auth")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Auth implements UserDetails {
 
     @Id
@@ -31,6 +28,7 @@ public class Auth implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private AuthRole role;
 
@@ -50,25 +48,13 @@ public class Auth implements UserDetails {
     )
     private List<Project> projectsImIn = new ArrayList<>();
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        if(this.role == AuthRole.ADMIN) {
-			return List.of(
-				new SimpleGrantedAuthority("ROLE_ADMIN"),
-				new SimpleGrantedAuthority("ROLE_USER"),
-				new SimpleGrantedAuthority("ROLE_GUEST")
-			);
-        }
-		if(this.role == AuthRole.USER) {
-			return List.of(
-				new SimpleGrantedAuthority("ROLE_USER"),
-				new SimpleGrantedAuthority("ROLE_GUEST")
-			);
-        }
-		return List.of(new SimpleGrantedAuthority("ROLE_GUEST"));
+    /**
+     * Construtor exigido pelo JPA/Hibernate.
+     */
+    protected Auth() {
     }
-    
-    protected Auth(String username, String email, String password, AuthRole role) {
+
+    public Auth(String username, String email, String password, AuthRole role) {
         this.username = username;
         this.email = email;
         this.password = password;
@@ -78,6 +64,29 @@ public class Auth implements UserDetails {
     public Auth(UUID id) {
         this.id = id;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == AuthRole.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_USER"),
+                    new SimpleGrantedAuthority("ROLE_GUEST")
+            );
+        }
+
+        if (this.role == AuthRole.USER) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_USER"),
+                    new SimpleGrantedAuthority("ROLE_GUEST")
+            );
+        }
+
+        return List.of(
+                new SimpleGrantedAuthority("ROLE_GUEST")
+        );
+    }
+
     @Override
     public String getPassword() {
         return this.password;
@@ -87,12 +96,30 @@ public class Auth implements UserDetails {
     public String getUsername() {
         return this.email;
     }
-    public UUID getId() {return id;}
-    public String getEmail() {return email;}
-    public String getName() {return username;}
-    public AuthRole getRole() {return role;}
-    public List<Project> getLikes() {return likes;}
-    public List<Project> getProjectsImIn() {return projectsImIn;}
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getName() {
+        return username;
+    }
+
+    public AuthRole getRole() {
+        return role;
+    }
+
+    public List<Project> getLikes() {
+        return likes;
+    }
+
+    public List<Project> getProjectsImIn() {
+        return projectsImIn;
+    }
 
     public void setUsername(String username) {
         if (username == null || username.isBlank()) {
