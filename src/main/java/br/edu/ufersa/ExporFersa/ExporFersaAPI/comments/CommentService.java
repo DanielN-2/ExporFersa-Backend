@@ -28,6 +28,7 @@ public class CommentService {
         if(userExists.isEmpty()) throw new InvalidOperationException("O usuário não existe.");
         Optional<Project> projectExists = projectRepository.findById(comment.getProject().getId());
         if(projectExists.isEmpty()) throw new InvalidOperationException("O projeto não existe.");
+        if(comment.getCommentMessage().isBlank()) throw new InvalidOperationException("O comentário não pode ser vazio.");
         return new Comment(projectExists.get(), userExists.get(), comment.getCommentMessage());
     }
 
@@ -35,6 +36,7 @@ public class CommentService {
         Comment stored = commentRepository.getReferenceById(id);
         if(stored == null) throw new InvalidOperationException("O comentário não existe.");
         if(!stored.getAuth().getId().equals(userId)) throw new InvalidOperationException("Credenciais de usuário incorretas.");
+        if(message.isBlank()) throw new InvalidOperationException("O comentário não pode ser vazio.");
         stored.setCommentMessage(message);
         return stored;
     }
