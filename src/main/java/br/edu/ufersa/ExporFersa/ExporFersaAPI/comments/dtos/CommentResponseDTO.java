@@ -26,7 +26,7 @@ public record CommentResponseDTO(
         return new CommentResponseDTO(
             comment.getId(),
             comment.getProject(),
-            comment.getUser(),
+            comment.getAuth(),
             comment.getCommentMessage()
         );
     }

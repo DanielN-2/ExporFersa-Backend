@@ -1,7 +1,9 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
+import org.springframework.stereotype.Service;
 
+@Service
 public class CommentService {
     private final CommentRepository commentRepository;
 

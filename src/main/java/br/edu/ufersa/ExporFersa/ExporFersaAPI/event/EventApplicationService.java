@@ -1,15 +1,13 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-
-import jakarta.transaction.Transactional;
-
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 @Service 
@@ -59,7 +57,7 @@ class EventApplicationService {
     List<EventResponseDTO> GetEventsByCategories(List<String> categories, Auth auth) {
         List<EventCategory> categoriesMapped = mapper.toCategories(categories);
         service.ValidateCategories(categoriesMapped, auth);
-        List<Event> events = repository.findByCategories(categoriesMapped);
+        List<Event> events = repository.findByCategoryIn(categoriesMapped);
         return mapper.toListResponseDTOs(events);
     }
 

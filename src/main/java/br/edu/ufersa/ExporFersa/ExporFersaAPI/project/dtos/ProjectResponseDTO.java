@@ -12,7 +12,7 @@ public record ProjectResponseDTO(
         String projectName,
 
         @NotEmpty(message = "O projeto deve possuir pelo menos um autor!")
-        List<@NotBlank(message = "O nome dos autores não pode ser vazio!") String> autores,
+        List<@NotBlank(message = "O nome dos autores não pode ser vazio!") String> authors,
 
         @NotBlank(message = "A URL do vídeo é obrigatória!")
         @Pattern(
