@@ -31,7 +31,7 @@ public class AuthApplicationService {
     public UserResponseDTO register(UserCreateDTO dto) {
         domainService.validationNewUser(dto.email());
 
-        String encryptedPassword = passwordEncoder.encode(dto.senha());
+        String encryptedPassword = passwordEncoder.encode(dto.password());
         Auth auth = mapper.toEntity(dto, encryptedPassword);
 
         return mapper.toResponseDTO(authRepository.save(auth));
