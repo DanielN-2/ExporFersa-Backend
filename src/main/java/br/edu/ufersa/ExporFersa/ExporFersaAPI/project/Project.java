@@ -1,0 +1,186 @@
+package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
+
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.*;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+@Entity
+@Table(name = "tb_project")
+public class Project {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "event_id", nullable = false)
+    private Event event;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private Auth auth;
+
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "project_name"))
+    private ProjectName projectName;
+
+    @ElementCollection
+    @CollectionTable(name = "project_authors", joinColumns = @JoinColumn(name = "project_id"))
+    private List<Author> authors;
+
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "video_url"))
+    private VideoURL videoURL;
+
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "summary", length = 1000))
+    private Summary summary;
+
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "description", length = 5000))
+    private Description description;
+
+//    @ElementCollection
+//    @CollectionTable(name = "project_images", joinColumns = @JoinColumn(name = "project_id"))
+//    @Column(name = "image_path")
+//    private List<String> images = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProjectStatus status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProjectCategory category;
+
+    protected Project() {
+    }
+
+    // refatoração futura - implementar padrão Builder
+    Project(
+            ProjectName projectName,
+            List<Author> authors,
+            VideoURL videoURL,
+            Summary summary,
+            Description description,
+            ProjectCategory category,
+            Event event,
+            Auth auth
+    ) {
+        validateInvariants(
+                projectName,
+                authors,
+                videoURL,
+                summary,
+                description,
+                category,
+                event,
+                auth
+        );
+        this.projectName = projectName;
+        this.authors = new ArrayList<>(authors);
+        this.videoURL = videoURL;
+        this.summary = summary;
+        this.description = description;
+        this.category = category;
+        this.event = event;
+        this.auth = auth;
+        this.status = ProjectStatus.PENDING;
+    }
+
+    public Project(Long id) {
+        this.id = id;
+    }
+
+    private void validateInvariants(
+            ProjectName projectName,
+            List<Author> authors,
+            VideoURL videoURL,
+            Summary summary,
+            Description description,
+            ProjectCategory category,
+            Event event,
+            Auth auth
+    ) {
+        if (projectName == null) throw new IllegalArgumentException("O nome do projeto é obrigatório.");
+        if (authors == null || authors.isEmpty())
+            throw new IllegalArgumentException("O projeto deve possuir pelo menos um autor.");
+        if (videoURL == null) throw new IllegalArgumentException("A URL do vídeo é obrigatória.");
+        if (summary == null) throw new IllegalArgumentException("O resumo é obrigatório.");
+        if (description == null) throw new IllegalArgumentException("A descrição é obrigatória.");
+        if (category == null) throw new IllegalArgumentException("A categoria é obrigatória.");
+        if (event == null) throw new IllegalArgumentException("O evento é obrigatório.");
+        if (auth == null) throw new IllegalArgumentException("O usuário é obrigatório.");
+    }
+
+    void approve() {
+        validateTransition(ProjectStatus.APPROVED);
+        this.status = ProjectStatus.APPROVED;
+    }
+
+    void reject() {
+        validateTransition(ProjectStatus.REJECTED);
+        this.status = ProjectStatus.REJECTED;
+    }
+
+    void validateTransition(ProjectStatus nextStatus) {
+        if (!this.status.canTransitionTo(nextStatus)) {
+            throw new IllegalStateException(
+                    String.format("Transição inválida: projeto está em '%s' e não pode mover para '%s'",
+                            this.status, nextStatus)
+            );
+        }
+    }
+
+//    void addImages(List<String> newImages) {
+//        this.images.addAll(newImages);
+//    }
+
+    public void ensureCanUpdate() {
+        if (status != ProjectStatus.PENDING) {
+            throw new InvalidOperationException(
+                    "Apenas projetos pendentes podem ser alterados."
+            );
+        }
+    }
+    public void ensureCanDelete() {
+        if (status == ProjectStatus.APPROVED) {
+            throw new InvalidOperationException(
+                    "Projetos aprovados não podem ser excluídos."
+            );
+        }
+    }
+    public Long getId() {return id;}
+    public Event getEvent() {return event;}
+    public Auth getAuth() {return auth;}
+    public ProjectName getProjectName() {return projectName;}
+    public List<Author> getAuthors() {return authors;}
+    public VideoURL getVideoURL() {return videoURL;}
+    public Summary getSummary() {return summary;}
+    public Description getDescription() {return description;}
+    public ProjectStatus getStatus() {return status;}
+    public ProjectCategory getCategory() {return category;}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (!(o instanceof Project other)) {
+            return false;
+        }
+
+        return id != null && id.equals(other.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
+
+}
