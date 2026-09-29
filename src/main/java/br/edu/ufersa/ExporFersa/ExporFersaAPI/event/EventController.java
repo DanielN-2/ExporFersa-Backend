@@ -2,7 +2,6 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
 import java.util.List;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
@@ -64,7 +64,7 @@ public class EventController {
 
     @GetMapping
     public ResponseEntity<List<EventResponseDTO>> ListEvents(
-        @RequestParam("category") List<String> eventCategories,
+        @RequestParam(name = "category", required = false) List<String> eventCategories,
         @AuthenticationPrincipal Auth auth
     ) {
         List<EventResponseDTO> response = appService.GetEventsByCategories(eventCategories, auth);
