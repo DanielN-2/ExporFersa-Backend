@@ -34,13 +34,13 @@ class EventService {
             throw new DataConflictException("Já existe um evento com o nome " + newEvent.getName() + " cadastrado.");
         }
 
-        if (oldEvent.getOperatingDates().startDate().isAfter(LocalDate.now())) {
+        if (oldEvent.getOperatingDates().startDate().isBefore(LocalDate.now())) {
             throw new InvalidOperationException("Não é possível mudar o evento depois da data de abertura."); 
         }
     }
 
     void ValidateDeleteEvent(Event event) {
-        if (event.getOperatingDates().startDate().isAfter(LocalDate.now())) {
+        if (event.getOperatingDates().startDate().isBefore(LocalDate.now())) {
             throw new InvalidOperationException("Não é possível deletar o evento depois de iniciado."); 
         }
     }
