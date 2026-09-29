@@ -24,11 +24,9 @@ public class Event {
     private EventCategory category;
 
     @Embedded 
-    @AttributeOverride(name = "value", column = @Column(name = "operating_date"))
     private OperatingDate operatingDate;
 
     @Embedded 
-    @AttributeOverride(name = "value", column = @Column(name = "opening_hours"))
     private OpeningHours openingHours;
 
     @ElementCollection
