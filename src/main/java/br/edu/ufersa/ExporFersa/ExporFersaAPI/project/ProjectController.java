@@ -41,18 +41,20 @@ public class ProjectController {
     @GetMapping("/events/{eventId}/projects")
     public ResponseEntity<List<ProjectResponseDTO>> listByEvent(
             @PathVariable Long eventId,
-            @RequestParam(required = false) ProjectCategoryDTO category
+            @RequestParam(required = false) ProjectCategoryDTO category,
+            @AuthenticationPrincipal Auth user
     ) {
-        return ResponseEntity.ok(service.getProjectsByEvent(category, eventId));
+        return ResponseEntity.ok(service.getProjectsByEvent(category, eventId, user));
     }
 
 
 
     @GetMapping("/projects")
     public ResponseEntity<List<ProjectResponseDTO>> listAll(
-            @RequestParam(required = false) ProjectCategoryDTO category
+            @RequestParam(required = false) ProjectCategoryDTO category,
+            @AuthenticationPrincipal Auth user
     ) {
-        return ResponseEntity.ok(service.getProjects(category));
+        return ResponseEntity.ok(service.getProjects(category, user));
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -73,8 +75,11 @@ public class ProjectController {
     }
 
     @GetMapping("/projects/{projectId}")
-    public ResponseEntity<ProjectResponseDTO> findOne(@PathVariable Long projectId) {
-        return ResponseEntity.ok(service.getById(projectId));
+    public ResponseEntity<ProjectResponseDTO> findOne(
+            @PathVariable Long projectId,
+            @AuthenticationPrincipal Auth user
+    ) {
+        return ResponseEntity.ok(service.getById(projectId, user));
     }
 
     @PreAuthorize("hasRole('USER')")

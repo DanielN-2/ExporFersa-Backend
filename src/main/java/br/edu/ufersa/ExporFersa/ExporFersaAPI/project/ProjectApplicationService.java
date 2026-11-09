@@ -1,6 +1,9 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.AuthRole;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.EventCategory;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.EventInternalApi;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.*;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.ProjectName;
@@ -32,17 +35,40 @@ class ProjectApplicationService {
 
     }
     @Transactional(readOnly = true)
-    public List<ProjectResponseDTO> getProjects(ProjectCategoryDTO category) {
-        List<Project> projects = category == null
-                ? repository.findAll()
-                : repository.findAllByCategory(category.toDomain());
+    public List<ProjectResponseDTO> getProjects(ProjectCategoryDTO category, Auth user) {
+        List<Project> projects;
+        System.out.println("Usuário: " + user);
+        System.out.println("Role: " + (user != null ? user.getRole() : null));
+        System.out.println("Categoria: " + category);
+        if (user != null && (user.getRole() == AuthRole.USER || user.getRole() == AuthRole.ADMIN )) {
+            projects = category == null
+                    ? repository.findAllByStatus(ProjectStatus.APPROVED)
+                    : repository.findAllByStatusAndCategory(ProjectStatus.APPROVED,category.toDomain());
+        } else {
+            projects = category == null
+                    ? repository.findAllByStatusAndEventCategory(ProjectStatus.APPROVED, EventCategory.EXTENSAO)
+                    : repository.findAllByStatusAndCategoryAndEventCategory(ProjectStatus.APPROVED, category.toDomain(), EventCategory.EXTENSAO);
+        }
         return mapper.toResponseList(projects);
     }
     @Transactional(readOnly = true)
-    public List<ProjectResponseDTO> getProjectsByEvent(ProjectCategoryDTO category, Long eventId) {
-        List<Project> projects = category == null
-                ? repository.findAllByEventId(eventId)
-                : repository.findAllByCategoryAndEventId(category.toDomain(), eventId);
+    public List<ProjectResponseDTO> getProjectsByEvent(ProjectCategoryDTO category, Long eventId, Auth user) {
+        List<Project> projects;
+        if (user != null && (user.getRole() == AuthRole.USER || user.getRole() == AuthRole.ADMIN )) {
+            projects= category == null
+                    ? repository.findAllByStatusAndEventId(ProjectStatus.APPROVED, eventId)
+                    : repository.findAllByStatusAndCategoryAndEventId(ProjectStatus.APPROVED, category.toDomain(), eventId);
+
+        } else {
+            projects = category == null
+                    ? repository.findAllByStatusAndEventIdAndEventCategory(ProjectStatus.APPROVED, eventId, EventCategory.EXTENSAO)
+                    : repository.findAllByStatusAndCategoryAndEventIdAndEventCategory(
+                            ProjectStatus.APPROVED,
+                            category.toDomain(),
+                            eventId,
+                            EventCategory.EXTENSAO
+                    );
+        }
         return mapper.toResponseList(projects);
     }
     @Transactional(readOnly = true)
@@ -60,8 +86,21 @@ class ProjectApplicationService {
     }
 
     @Transactional(readOnly = true)
-    public ProjectResponseDTO getById(long projectId) {
+    public ProjectResponseDTO getById(long projectId, Auth user) {
         Project project = repository.findById(projectId).orElseThrow(() -> new EntityNotFoundException("Projeto não encontrado!"));
+
+        if(project.getStatus() != ProjectStatus.APPROVED && user.getRole() != AuthRole.ADMIN) {
+            throw new AccessDeniedException("Você não possui permissão para visualizar esse projeto.");
+        }
+
+        Event projectEvent = project.getEvent();
+        boolean hasFullAccess = user != null
+                && (user.getRole() == AuthRole.ADMIN
+                || user.getRole() == AuthRole.USER);
+        if(projectEvent.getCategory() != EventCategory.EXTENSAO && !hasFullAccess) {
+            throw new AccessDeniedException("Somente membros da instituição podem visualizar esse projeto.");
+        }
+
 
         return mapper.toResponse(project);
     }
