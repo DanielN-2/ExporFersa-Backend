@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.EventCategory;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.OpeningHours;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.OperatingDate;
 
@@ -28,5 +29,5 @@ public record EventResponseDTO(
     OpeningHours hours,
 
     @NotNull(message = "A lista de URLs de imagens não pode ser nula.")
-    List<String> imagesURLs
+    List<ImageData> images
 ) {}

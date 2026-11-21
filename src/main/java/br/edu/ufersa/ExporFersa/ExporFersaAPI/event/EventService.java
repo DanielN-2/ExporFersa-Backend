@@ -3,6 +3,7 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.AuthRole;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.DataConflictException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.EntityNotFoundException;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.ImageNotFoundException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
 
 
@@ -81,4 +83,16 @@ class EventService {
         }
     }
 
+    int ValidateEventImage(Event event, UUID imageId) {
+        int index = 0;
+
+       for (var image : event.getImages()) {
+            if (image.id().equals(imageId)) {
+                return index;
+            }
+            index++;
+       }
+
+        throw new ImageNotFoundException("A imagem selecionada não pertence ao evento.");
+    }
 }

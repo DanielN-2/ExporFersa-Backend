@@ -1,8 +1,10 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.OpeningHours;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.OperatingDate;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +33,8 @@ public class Event {
 
     @ElementCollection
     @CollectionTable(name = "tb_event_images", joinColumns = @JoinColumn(name="event_id"))
-    @Column(name = "images_urls")
-    private List<String> imagesURLs = new ArrayList<String>();
+    @Size(max = 10, message = "Um evento só pode ter no máximo 5 imagens.") 
+    private List<ImageData> images = new ArrayList<ImageData>();
 
 
     protected Event(){}
@@ -52,14 +54,14 @@ public class Event {
         EventCategory category,
         OperatingDate dates,
         OpeningHours hours,
-        List<String> imagesURLs
+        List<ImageData> images
     ) {
         this.id = id;
         this.name = name;
         this.category = category;
         this.operatingDate = dates;
         this.openingHours = hours;
-        this.imagesURLs = imagesURLs;
+        this.images= images;
     }
 
     public Long getId() { return this.id; }
@@ -67,10 +69,14 @@ public class Event {
     public EventCategory getCategory() { return this.category; }
     public OperatingDate getOperatingDates() { return this.operatingDate; }
     public OpeningHours getOpeningHours() { return this.openingHours; }
-    public List<String> getImagesURLs() { return List.copyOf(imagesURLs); }
+    public List<ImageData> getImages() { return this.images; }
+
+    public void addImageData(ImageData imageData) { 
+        images.add(imageData);
+    }
 
     public Event getCopy() {
-        return new Event(id, name, category, operatingDate, openingHours, imagesURLs);
+        return new Event(id, name, category, operatingDate, openingHours, images);
     }
      
     @Override

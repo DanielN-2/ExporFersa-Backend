@@ -1,8 +1,11 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventCreateDTO;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventImageUpdateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
+
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
@@ -25,8 +28,12 @@ public interface EventMapper {
     List<EventResponseDTO> toListResponseDTOs(List<Event> entities);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "imagesURLs", ignore = true)
+    @Mapping(target = "images", ignore = true)
     void updateEntityFromDTO(EventUpdateDTO dto, @MappingTarget Event entity);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "imageURL", ignore = true)
+    void updateEventImageDataFromDTO(EventImageUpdateDTO dto, @MappingTarget ImageData data);
     
     default List<EventCategory> toCategories(List<String> categories) {
         List<EventCategory> mapped = categories.stream().map(cat -> {

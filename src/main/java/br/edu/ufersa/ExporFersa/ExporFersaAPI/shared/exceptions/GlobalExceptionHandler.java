@@ -1,8 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.DataConflictException;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.EntityNotFoundException;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.*;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +76,50 @@ public class GlobalExceptionHandler {
                 "Usuário inexistente ou senha inválida."
         );
         problem.setTitle("Credenciais Inválidas");
+        problem.setProperty("timestamp", Instant.now());
+        return problem;
+    }
+
+    @ExceptionHandler(CannotCreateDirectoryException.class)
+    public ProblemDetail handleCannotCreateDirectory(Exception ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+            HttpStatus.INTERNAL_SERVER_ERROR, 
+            "Não foi possível criar o diretório de imagens."
+        );
+        problem.setTitle("Erro no serviço de imagens");
+        problem.setProperty("timestamp", Instant.now());
+        return problem;
+    }
+
+    @ExceptionHandler(CannotSaveImageException.class)
+    public ProblemDetail handleCannotSaveImage(Exception ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+            HttpStatus.INTERNAL_SERVER_ERROR, 
+            "Não foi possível salvar a imagem."
+        );
+        problem.setTitle("Erro no serviço de imagens");
+        problem.setProperty("timestamp", Instant.now());
+        return problem;
+    }
+
+    @ExceptionHandler(CannotDeleteImageException.class)
+    public ProblemDetail handleCannotDeleteImage(Exception ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+            HttpStatus.INTERNAL_SERVER_ERROR, 
+            "Não foi possível deletar a imagem."
+        );
+        problem.setTitle("Erro ao deletar a imagem.");
+        problem.setProperty("timestamp", Instant.now());
+        return problem;
+    }
+
+    @ExceptionHandler(ImageNotFoundException.class)
+    public ProblemDetail handleImageNotFound(Exception ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(
+            HttpStatus.INTERNAL_SERVER_ERROR, 
+            "Não foi possível achar a imagem."
+        );
+        problem.setTitle("Imagem não encontrada");
         problem.setProperty("timestamp", Instant.now());
         return problem;
     }
