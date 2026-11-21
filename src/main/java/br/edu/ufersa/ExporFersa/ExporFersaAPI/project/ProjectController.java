@@ -12,11 +12,13 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @Validated
 @RestController
 @RequestMapping("/api/v1")
 public class ProjectController {
+
     private final ProjectApplicationService service;
 
     ProjectController(ProjectApplicationService service) {
@@ -64,6 +66,7 @@ public class ProjectController {
     ) {
         return ResponseEntity.ok(service.getMyProjects(user));
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin/projects")
     public ResponseEntity<List<ProjectResponseDTO>> listAdminProjects(
@@ -80,6 +83,16 @@ public class ProjectController {
             @AuthenticationPrincipal Auth user
     ) {
         return ResponseEntity.ok(service.getById(projectId, user));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/projects/{projectId}/image")
+    public ResponseEntity<ProjectResponseDTO> addImage(
+        @PathVariable Long projectId,
+        @ModelAttribute @Valid ProjectImageCreateDTO dto,
+        @AuthenticationPrincipal Auth user
+    ) {
+        return ResponseEntity.ok(service.addImage(projectId, dto, user));
     }
 
     @PreAuthorize("hasRole('USER')")
@@ -103,7 +116,18 @@ public class ProjectController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @DeleteMapping("/{projectId}")
+    @PatchMapping("/projects/{projectId}/image/{imageId}")
+    public ResponseEntity<ProjectResponseDTO> updateImage(
+        @PathVariable Long projectId,
+        @PathVariable UUID imageId,
+        @AuthenticationPrincipal Auth user,
+        @RequestBody ProjectImageUpdateDTO dto
+    ) {
+        return ResponseEntity.ok(service.updateImage(projectId, imageId, user, dto));
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/projects/{projectId}")
     public ResponseEntity<Void> delete(
             @PathVariable Long projectId,
             @AuthenticationPrincipal Auth user
@@ -112,5 +136,13 @@ public class ProjectController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping("/projects/{projectId}/image/{imageId}")
+    public ResponseEntity<ProjectResponseDTO> deleteImage(
+        @PathVariable Long projectId,
+        @PathVariable UUID imageId,
+        @AuthenticationPrincipal Auth user
+    ) {
+        return ResponseEntity.ok(service.deleteImage(projectId, imageId, user));
+    }
 }

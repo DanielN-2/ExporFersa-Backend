@@ -4,11 +4,15 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectCategoryDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectCreateDTO;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectImageUpdateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectPatchDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.*;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
+
 import org.mapstruct.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,14 +31,15 @@ interface ProjectMapper {
         }
 
         return new Project(
-                mapProjectName(dto.projectName()),
-                mapAuthors(dto.authors()),
-                mapVideoURL(dto.videoURL()),
-                mapSummary(dto.summary()),
-                mapDescription(dto.description()),
-                mapProjectCategory(dto.category()),
-                new Event(eventId),
-                new Auth(userId)
+            mapProjectName(dto.projectName()),
+            mapAuthors(dto.authors()),
+            mapVideoURL(dto.videoURL()),
+            mapSummary(dto.summary()),
+            mapDescription(dto.description()),
+            new ArrayList<ImageData>(),
+            mapProjectCategory(dto.category()),
+            new Event(eventId),
+            new Auth(userId)
         );
     }
 
@@ -68,6 +73,14 @@ interface ProjectMapper {
 
     default Description mapDescription(String value) {
         return value == null ? null : new Description(value);
+    }
+
+    default List<ImageData> mapImages(List<ImageData> images) {
+        if (images == null) {
+            return null;
+        }
+
+        return images.stream().map(i -> new ImageData(i.id(), i.imageURL(), i.title())).toList();
     }
 
 
@@ -114,8 +127,14 @@ interface ProjectMapper {
     @Mapping(target = "event", ignore = true)
     @Mapping(target = "auth", ignore = true)
     @Mapping(target = "status", ignore = true)
+    @Mapping(target = "images", ignore = true)
     void updateEntityFromDto(
             ProjectPatchDTO dto,
             @MappingTarget Project entity
     );
+    
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "imageURL", ignore = true)
+    void updateProjectImageFromDTO(ProjectImageUpdateDTO dto, @MappingTarget ImageData data);
+    
 }

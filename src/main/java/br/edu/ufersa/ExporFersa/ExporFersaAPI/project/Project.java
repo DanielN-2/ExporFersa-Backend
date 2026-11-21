@@ -3,8 +3,11 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.*;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.CannotSaveImageException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "tb_project")
 public class Project {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -45,10 +49,10 @@ public class Project {
     @AttributeOverride(name = "value", column = @Column(name = "description", length = 5000))
     private Description description;
 
-//    @ElementCollection
-//    @CollectionTable(name = "project_images", joinColumns = @JoinColumn(name = "project_id"))
-//    @Column(name = "image_path")
-//    private List<String> images = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(name = "tb_project_images", joinColumns = @JoinColumn(name = "project_id"))
+    @Size(max = 5, message = "Um projetos só pode ter no máximo 5 imagens.") 
+    private List<ImageData> images = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -63,14 +67,15 @@ public class Project {
 
     // refatoração futura - implementar padrão Builder
     Project(
-            ProjectName projectName,
-            List<Author> authors,
-            VideoURL videoURL,
-            Summary summary,
-            Description description,
-            ProjectCategory category,
-            Event event,
-            Auth auth
+        ProjectName projectName,
+        List<Author> authors,
+        VideoURL videoURL,
+        Summary summary,
+        Description description,
+        List<ImageData> images,
+        ProjectCategory category,
+        Event event,
+        Auth auth
     ) {
         validateInvariants(
                 projectName,
@@ -137,9 +142,13 @@ public class Project {
         }
     }
 
-//    void addImages(List<String> newImages) {
-//        this.images.addAll(newImages);
-//    }
+    void addImages(ImageData newImages) {
+        if (images.size() >= 5) {
+            throw new CannotSaveImageException("Um projeto só pode ter, no máximo, 5 imagens.");
+        }
+
+        this.images.add(newImages);
+    }
 
     public void ensureCanUpdate() {
         if (status != ProjectStatus.PENDING) {
@@ -163,8 +172,11 @@ public class Project {
     public VideoURL getVideoURL() {return videoURL;}
     public Summary getSummary() {return summary;}
     public Description getDescription() {return description;}
+    public List<ImageData> getImages() {return images;}
     public ProjectStatus getStatus() {return status;}
     public ProjectCategory getCategory() {return category;}
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {

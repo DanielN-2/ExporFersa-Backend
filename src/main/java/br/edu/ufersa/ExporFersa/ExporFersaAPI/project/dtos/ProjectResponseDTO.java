@@ -4,6 +4,8 @@ import jakarta.validation.constraints.*;
 
 import java.util.List;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
+
 public record ProjectResponseDTO(
         @NotNull(message = "O ID é obrigatório!")
         Long id,
@@ -28,6 +30,9 @@ public record ProjectResponseDTO(
         @NotBlank(message = "A descrição é obrigatória!")
         @Size(max = 5000, message = "A descrição não pode possuir mais de 5000 caracteres!")
         String description,
+
+        @NotEmpty(message = "As imagens são obrigatórias!")
+        List<ImageData> images, 
 
         @NotNull(message = "A categoria é obrigatória!")
         ProjectCategoryDTO category

@@ -10,10 +10,14 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.ProjectName;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.AccessDeniedException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.EntityNotFoundException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.services.FileService;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 class ProjectApplicationService {
@@ -21,25 +25,27 @@ class ProjectApplicationService {
     private final ProjectService service;
     private final EventInternalApi eventApi;
     private final ProjectMapper mapper;
+    private final FileService fileService;
 
     ProjectApplicationService(
             ProjectRepository repository,
             ProjectService service,
             EventInternalApi eventApi,
-            ProjectMapper mapper
+            ProjectMapper mapper,
+            FileService fileService
     ) {
         this.repository = repository;
         this.service = service;
         this.eventApi = eventApi;
         this.mapper = mapper;
+        this.fileService = fileService;
 
     }
+
     @Transactional(readOnly = true)
     public List<ProjectResponseDTO> getProjects(ProjectCategoryDTO category, Auth user) {
         List<Project> projects;
-        System.out.println("Usuário: " + user);
-        System.out.println("Role: " + (user != null ? user.getRole() : null));
-        System.out.println("Categoria: " + category);
+
         if (user != null && (user.getRole() == AuthRole.USER || user.getRole() == AuthRole.ADMIN )) {
             projects = category == null
                     ? repository.findAllByStatus(ProjectStatus.APPROVED)
@@ -51,6 +57,7 @@ class ProjectApplicationService {
         }
         return mapper.toResponseList(projects);
     }
+
     @Transactional(readOnly = true)
     public List<ProjectResponseDTO> getProjectsByEvent(ProjectCategoryDTO category, Long eventId, Auth user) {
         List<Project> projects;
@@ -71,6 +78,7 @@ class ProjectApplicationService {
         }
         return mapper.toResponseList(projects);
     }
+    
     @Transactional(readOnly = true)
     public List<ProjectResponseDTO> getAdminProjects(StatusDTO status) {
         List<Project> projects = status == null
@@ -173,18 +181,74 @@ class ProjectApplicationService {
     @Transactional
     public void delete(Long projectId, Auth user) {
         Project project = repository.findById(projectId)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        "Projeto não encontrado."
-                ));
+            .orElseThrow(() -> new EntityNotFoundException(
+                    "Projeto não encontrado."
+            ));
 
         if (!project.getAuth().getId().equals(user.getId())) {
             throw new AccessDeniedException(
-                    "Você não possui permissão para excluir este projeto."
+                "Você não possui permissão para excluir este projeto."
             );
         }
 
         project.ensureCanDelete();
 
         repository.delete(project);
+    }
+
+    @Transactional
+    public ProjectResponseDTO addImage(Long projectId, ProjectImageCreateDTO dto, Auth user) {
+        Project project = repository.findById(projectId).orElseThrow(() -> new EntityNotFoundException(
+            "Projeto não encontrado."
+        ));
+
+        if (!project.getAuth().getId().equals(user.getId())) {
+            throw new AccessDeniedException("Você não tem permissão para adicionar imagens nesse projeto.");
+        }
+
+        ImageData newImage = fileService.saveImage("projetos", dto.imageTitle(), dto.image());
+        project.addImages(newImage);
+
+        repository.save(project);
+        return mapper.toResponse(project);
+    }
+
+    @Transactional 
+    public ProjectResponseDTO updateImage(Long projectId, UUID imageId, Auth user, ProjectImageUpdateDTO dto) {
+        Project project = repository.findById(projectId).orElseThrow(() -> new EntityNotFoundException(
+            "Projeto não encontrado."
+        ));
+
+        if (!project.getAuth().getId().equals(user.getId())) {
+            throw new AccessDeniedException("Você não tem permissão para alterar imagens nesse projeto.");
+        }
+
+        int imageIndex = service.validateProjectImage(project, imageId);
+
+        mapper.updateProjectImageFromDTO(dto, project.getImages().get(imageIndex));
+        repository.save(project);
+
+        return mapper.toResponse(project);
+    }
+
+    @Transactional
+    public ProjectResponseDTO deleteImage(Long projectId, UUID imageId, Auth user) {
+        Project project = repository.findById(projectId).orElseThrow(() -> new EntityNotFoundException(
+            "Projeto não encontrado."
+        ));
+
+        if (!project.getAuth().getId().equals(user.getId())) {
+            throw new AccessDeniedException("Você não tem permissão para alterar imagens nesse projeto.");
+        }
+
+        int imageIndex = service.validateProjectImage(project, imageId);
+
+        ImageData oldImage = project.getImages().get(imageIndex);
+        fileService.deleteImage(oldImage.imageURL());
+
+        project.getImages().remove(imageIndex);
+        repository.save(project);
+
+        return mapper.toResponse(project);
     }
 }

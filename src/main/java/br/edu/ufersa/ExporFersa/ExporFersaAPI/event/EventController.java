@@ -64,7 +64,7 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
-    @PatchMapping("/{eventId}/{imageId}/update")
+    @PatchMapping("/{eventId}/image/{imageId}/update")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponseDTO> UpdateEventImage(
         @PathVariable Long eventId,
@@ -109,7 +109,7 @@ public class EventController {
         return ResponseEntity.ok(null);
     }
 
-    @DeleteMapping("/{eventId}/{imageId}")
+    @DeleteMapping("/{eventId}/image/{imageId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EventResponseDTO> DeleteEventImage(
         @PathVariable Long eventId,

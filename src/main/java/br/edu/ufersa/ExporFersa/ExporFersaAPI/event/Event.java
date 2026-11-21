@@ -1,5 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.CannotSaveImageException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.OpeningHours;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.OperatingDate;
@@ -33,7 +34,7 @@ public class Event {
 
     @ElementCollection
     @CollectionTable(name = "tb_event_images", joinColumns = @JoinColumn(name="event_id"))
-    @Size(max = 10, message = "Um evento só pode ter no máximo 5 imagens.") 
+    @Size(max = 10, message = "Um evento só pode ter no máximo 10 imagens.") 
     private List<ImageData> images = new ArrayList<ImageData>();
 
 
@@ -72,6 +73,10 @@ public class Event {
     public List<ImageData> getImages() { return this.images; }
 
     public void addImageData(ImageData imageData) { 
+        if (images.size() >= 10) {
+            throw new CannotSaveImageException("Um evento só pode possuir, no máximo, 10 imagens.");
+        }
+
         images.add(imageData);
     }
 

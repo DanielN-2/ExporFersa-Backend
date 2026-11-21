@@ -2,6 +2,10 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.ProjectName;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.DataConflictException;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.ImageNotFoundException;
+
+import java.util.UUID;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -38,5 +42,19 @@ class ProjectService {
                     "Já existe um projeto com este nome neste evento."
             );
         }
+    }
+
+    public int validateProjectImage(Project project, UUID imageId) {
+        int index = 0;
+
+        for (var image : project.getImages()) {
+            if (image.id().equals(imageId)) {
+                return index;
+            }
+
+            index++;
+        }
+
+        throw new ImageNotFoundException("Imagem não encontrada.");
     }
 }
