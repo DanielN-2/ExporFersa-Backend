@@ -69,4 +69,16 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/{id}/image")
+    public ResponseEntity<UserResponseDTO> addImage(
+        @PathVariable UUID id, 
+        @ModelAttribute @Valid UserAddImageDTO imageDto
+    ) {
+        return ResponseEntity.ok(authApplicationService.addImage(id, imageDto));
+    }
+
+    @DeleteMapping("/{id}/image")
+    public ResponseEntity<UserResponseDTO> deleteImage(@PathVariable UUID id) {
+        return ResponseEntity.ok(authApplicationService.deleteImage(id));
+    }
 }

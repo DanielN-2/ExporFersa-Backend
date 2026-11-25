@@ -48,17 +48,21 @@ public class Auth implements UserDetails {
     )
     private List<Project> projectsImIn = new ArrayList<>();
 
+    @Column
+    private String imageURL;
+
     /**
      * Construtor exigido pelo JPA/Hibernate.
      */
     protected Auth() {
     }
 
-    public Auth(String username, String email, String password, AuthRole role) {
+    public Auth(String username, String email, String password, AuthRole role, String imageURL) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
+        this.imageURL = imageURL;
     }
 
     public Auth(UUID id) {
@@ -121,6 +125,10 @@ public class Auth implements UserDetails {
         return projectsImIn;
     }
 
+    public String getImageURL() {
+        return imageURL;
+    }
+
     public void setUsername(String username) {
         if (username == null || username.isBlank()) {
             throw new IllegalArgumentException("O username não pode ser vazio.");
@@ -135,5 +143,9 @@ public class Auth implements UserDetails {
         }
 
         this.password = password;
+    }
+
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

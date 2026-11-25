@@ -1,10 +1,14 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserAddImageDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserPasswordUpdateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserUpdateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.EntityNotFoundException;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.services.FileService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,12 +23,14 @@ public class AuthApplicationService {
     private final AuthService domainService;
     private final AuthMapper mapper;
     private final PasswordEncoder passwordEncoder;
+    private final FileService fileService;
 
-    public AuthApplicationService(AuthRepository authRepository, AuthService domainService, AuthMapper mapper, PasswordEncoder passwordEncoder) {
+    public AuthApplicationService(AuthRepository authRepository, AuthService domainService, AuthMapper mapper, PasswordEncoder passwordEncoder, FileService fileService) {
         this.authRepository = authRepository;
         this.domainService = domainService;
         this.mapper = mapper;
         this.passwordEncoder = passwordEncoder;
+        this.fileService = fileService;
     }
 
     @Transactional
@@ -76,6 +82,39 @@ public class AuthApplicationService {
         mapper.updateUserPassword(encodePassword, auth);
 
         authRepository.save(auth);
+    }
+
+    @Transactional
+    public UserResponseDTO addImage(UUID id, UserAddImageDTO dto) {
+        Auth auth = getAuthOrThrow(id);
+
+        if (auth.getImageURL() != null) {
+            fileService.deleteImage(auth.getImageURL());
+        }
+
+        ImageData imageData = fileService.saveImage("usuarios", auth.getName(), dto.image());
+        auth.setImageURL(imageData.imageURL());
+
+        authRepository.save(auth);
+        return mapper.toResponseDTO(auth);
+    }
+
+    @Transactional
+    public UserResponseDTO deleteImage(UUID id) {
+        Auth auth = getAuthOrThrow(id);
+
+        if (auth.getImageURL() == null) {
+            throw new InvalidOperationException("O usuário não possui uma imagem associada.");
+        }
+
+        if (fileService.existsImage(auth.getImageURL())) {
+            fileService.deleteImage(auth.getImageURL());
+        }
+
+        auth.setImageURL(null);
+        authRepository.save(auth);
+
+        return mapper.toResponseDTO(auth);
     }
 
     private Auth getAuthOrThrow(UUID id) {

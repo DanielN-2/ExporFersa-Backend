@@ -14,18 +14,20 @@ public interface AuthMapper {
     @Mapping(target = "password", source = "encodePassword")
     void updateUserPassword(String encodePassword, @MappingTarget Auth user);
 
+    @Mapping(target = "imageURL", ignore = true)
     void updateUserFromDTO(UserUpdateDTO dto, @MappingTarget Auth user);
 
     default Auth toEntity(UserCreateDTO dto, String encryptedPassword) {
-        return new Auth(dto.username(), dto.email(), encryptedPassword, dto.role());
+        return new Auth(dto.username(), dto.email(), encryptedPassword, dto.role(), null);
     }
 
     default UserResponseDTO toResponseDTO(Auth auth) {
         return new UserResponseDTO(
-                auth.getId(),
-                auth.getUsername(),
-                auth.getEmail(),
-                auth.getRole()
+            auth.getId(),
+            auth.getUsername(),
+            auth.getEmail(),
+            auth.getRole(),
+            auth.getImageURL()
         );
     }
 }

@@ -9,11 +9,11 @@ public record UserResponseDTO (
         UUID id,
         String email,
         String username,
-        AuthRole role
-
+        AuthRole role,
+        String imageURL
         // FAZER A LISTAGEM DE PROJETOS E PROJETOS COM LIKES FUTURAMENTE
 ) {
     public UserResponseDTO(Auth auth) {
-        this(auth.getId(), auth.getEmail(), auth.getUsername(), auth.getRole());
+        this(auth.getId(), auth.getEmail(), auth.getUsername(), auth.getRole(), auth.getImageURL());
     }
 }

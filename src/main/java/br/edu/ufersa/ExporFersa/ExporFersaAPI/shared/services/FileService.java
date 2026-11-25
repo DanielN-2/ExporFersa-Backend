@@ -19,7 +19,7 @@ public class FileService {
 
     private final Path imagesDirectory = Path.of("images/");
     private final Set<String> SuportedExtensions = Set.of(
-        "jpeg", "jpg", "png"
+        ".jpeg", ".jpg", ".png"
     );
     
     FileService() {
@@ -28,6 +28,7 @@ public class FileService {
                 Files.createDirectory(imagesDirectory);
                 Files.createDirectory(imagesDirectory.resolve("eventos"));
                 Files.createDirectory(imagesDirectory.resolve("projetos"));
+                Files.createDirectory(imagesDirectory.resolve("usuarios"));
             } catch (IOException e) {
                 System.out.println("Erro ao criar o diretório de images.");
                 throw new CannotCreateDirectoryException(e.getMessage());
@@ -38,7 +39,7 @@ public class FileService {
     public ImageData saveImage(String directory, String title, MultipartFile file) {
 
         String extension = retrieveFileExtension(file.getOriginalFilename());
-        if (isImageByExtension(extension)) {
+        if (!isImageByExtension(extension)) {
             throw new CannotSaveImageException("O arquivo não possui uma extensão válida.");
         }
 
@@ -47,6 +48,12 @@ public class FileService {
         String imageURL = directory + "/" + title + "-" + savedAt.toString().replace(":", "") + extension;
 
         try {
+            Path imagePath = imagesDirectory.resolve(imageURL).normalize();
+
+            if (!imagePath.startsWith(imagesDirectory.normalize())) {
+                throw new CannotDeleteImageException("Caminho de imagem inválido.");
+            }
+
             Files.copy(file.getInputStream(), imagesDirectory.resolve(imageURL));
         } catch (IOException e) {
             throw new CannotSaveImageException("Não foi possível salvar a imagem: " + e.getMessage());
@@ -61,6 +68,12 @@ public class FileService {
 
     public boolean deleteImage(String imageURL) {
         try {
+            Path imagePath = imagesDirectory.resolve(imageURL).normalize();
+
+            if (!imagePath.startsWith(imagesDirectory.normalize())) {
+                throw new CannotDeleteImageException("Caminho de imagem inválido.");
+            }
+
             return Files.deleteIfExists(imagesDirectory.resolve(imageURL));
         } catch (IOException e) {
             throw new CannotDeleteImageException("Não foi possível deletar a imagem: " + e.getMessage());
@@ -79,7 +92,7 @@ public class FileService {
         if (extension == null) {
             return false;
         }
-
+        System.out.println(extension);
         return SuportedExtensions.contains(extension.toLowerCase());
     }
     
