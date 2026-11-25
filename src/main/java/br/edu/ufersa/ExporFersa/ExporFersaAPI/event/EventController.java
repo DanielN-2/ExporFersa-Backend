@@ -102,6 +102,15 @@ public class EventController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/date")
+    public ResponseEntity<List<EventResponseDTO>> ListEventsByStatus(
+        @RequestParam(required = false) String status,
+        @AuthenticationPrincipal Auth user
+    ) {
+        List<EventResponseDTO> response = appService.GetEventsByStatus(status, user);
+        return ResponseEntity.ok(response);
+    }
+
     @DeleteMapping("/{eventId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> DeleteEvent(@PathVariable Long eventId) {

@@ -46,5 +46,5 @@ public interface EventMapper {
 
         return mapped;
     }
-
+    
 }

@@ -83,6 +83,18 @@ class EventService {
         }
     }
 
+    EventStatus ValidateStatus(String status) {
+        if (status == null) {
+            throw new InvalidOperationException("Status não informado.");
+        }
+
+        try {
+            return EventStatus.valueOf(status.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new InvalidOperationException("Status inválido.");
+        }
+    }
+
     int ValidateEventImage(Event event, UUID imageId) {
         int index = 0;
 

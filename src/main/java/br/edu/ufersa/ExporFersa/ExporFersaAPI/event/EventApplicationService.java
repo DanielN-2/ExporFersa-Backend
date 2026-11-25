@@ -107,6 +107,20 @@ class EventApplicationService {
     }
 
     @Transactional 
+    List<EventResponseDTO> GetEventsByStatus(String status, Auth user) {
+        EventStatus statusType = service.ValidateStatus(status);
+
+        List<Event> events = switch(statusType) {
+            case UPCOMING -> repository.findUpcomingEvents();
+            case ONGOING -> repository.findOngoingEvents();
+            case FINISHED -> repository.findFinishedEvents();
+        };
+
+        service.ValidateAcessListOfEvents(events, user);
+        return mapper.toListResponseDTOs(events);
+    }
+
+    @Transactional 
     void DeleteEvent(Long id) {
         Event event = service.ValidateEvent(repository.findById(id));
         service.ValidateDeleteEvent(event);
