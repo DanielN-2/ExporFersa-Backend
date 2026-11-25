@@ -242,9 +242,11 @@ class ProjectApplicationService {
         }
 
         int imageIndex = service.validateProjectImage(project, imageId);
+        String imageURL = project.getImages().get(imageIndex).imageURL();
 
-        ImageData oldImage = project.getImages().get(imageIndex);
-        fileService.deleteImage(oldImage.imageURL());
+        if (fileService.existsImage(imageURL)) {
+            fileService.deleteImage(imageURL);
+        }
 
         project.getImages().remove(imageIndex);
         repository.save(project);

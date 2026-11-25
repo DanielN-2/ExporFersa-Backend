@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -23,16 +24,14 @@ public class FileService {
     );
     
     FileService() {
-        if (!Files.exists(imagesDirectory)) {
-            try {
-                Files.createDirectory(imagesDirectory);
-                Files.createDirectory(imagesDirectory.resolve("eventos"));
-                Files.createDirectory(imagesDirectory.resolve("projetos"));
-                Files.createDirectory(imagesDirectory.resolve("usuarios"));
-            } catch (IOException e) {
-                System.out.println("Erro ao criar o diretório de images.");
-                throw new CannotCreateDirectoryException(e.getMessage());
+        try {
+            Files.createDirectories(imagesDirectory);
+            for(String dir : List.of("eventos", "projetos", "usuarios")) {
+                Files.createDirectories(imagesDirectory.resolve(dir));
             }
+        } catch (IOException e) {
+            System.out.println("Erro ao criar o diretório de images.");
+            throw new CannotCreateDirectoryException(e.getMessage());
         }
     }
 

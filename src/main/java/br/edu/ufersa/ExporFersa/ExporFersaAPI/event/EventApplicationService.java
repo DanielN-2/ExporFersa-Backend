@@ -133,7 +133,10 @@ class EventApplicationService {
         int imageIndex = service.ValidateEventImage(event, imageId);
 
         String imageURL = event.getImages().get(imageIndex).imageURL();
-        fileService.deleteImage(imageURL);
+        
+        if (fileService.existsImage(imageURL)) {
+            fileService.deleteImage(imageURL);
+        }
 
         event.getImages().remove(imageIndex);
 
