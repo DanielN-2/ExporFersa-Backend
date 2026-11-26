@@ -2,14 +2,9 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectCategoryDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectCreateDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectImageUpdateDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectPatchDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.ProjectResponseDTO;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos.*;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.*;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
-
 import org.mapstruct.*;
 
 import java.util.ArrayList;
@@ -85,10 +80,14 @@ interface ProjectMapper {
 
 
     // Entity → DTO
-
+    @Mapping(source = "event.name", target = "eventName")
     ProjectResponseDTO toResponse(Project entity);
 
     List<ProjectResponseDTO> toResponseList(List<Project> entities);
+
+    default StatusDTO mapStatus(ProjectStatus status) {
+        return status == null ? null : StatusDTO.fromDomain(status);
+    }
 
     default String mapProjectName(ProjectName value) {
         return value == null ? null : value.value();

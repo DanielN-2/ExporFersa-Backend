@@ -78,13 +78,20 @@ class ProjectApplicationService {
         }
         return mapper.toResponseList(projects);
     }
-    
+
     @Transactional(readOnly = true)
     public List<ProjectResponseDTO> getAdminProjects(StatusDTO status) {
         List<Project> projects = status == null
-                ? repository.findAllByStatus(ProjectStatus.PENDING)
+                ? repository.findAllWithEvent()
                 : repository.findAllByStatus(status.toDomain());
         return mapper.toResponseList(projects);
+    }
+    public ProjectStatsDTO getProjectStats() {
+        return new ProjectStatsDTO(
+                repository.countByStatus(ProjectStatus.APPROVED),
+                repository.countByStatus(ProjectStatus.PENDING),
+                repository.countByStatus(ProjectStatus.REJECTED)
+        );
     }
     @Transactional(readOnly = true)
     public List<ProjectResponseDTO> getMyProjects(Auth user) {

@@ -76,6 +76,11 @@ public class ProjectController {
                 service.getAdminProjects(status)
         );
     }
+    @GetMapping("admin/projects/stats")
+    @PreAuthorize("hasRole('ADMIN')")
+    public  ResponseEntity<ProjectStatsDTO> getProjectStats() {
+        return ResponseEntity.ok(service.getProjectStats());
+    }
 
     @GetMapping("/projects/{projectId}")
     public ResponseEntity<ProjectResponseDTO> findOne(

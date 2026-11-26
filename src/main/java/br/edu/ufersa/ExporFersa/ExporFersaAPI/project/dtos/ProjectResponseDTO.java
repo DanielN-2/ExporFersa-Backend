@@ -1,10 +1,9 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.project.dtos;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
 import jakarta.validation.constraints.*;
 
 import java.util.List;
-
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
 
 public record ProjectResponseDTO(
         @NotNull(message = "O ID é obrigatório!")
@@ -35,7 +34,13 @@ public record ProjectResponseDTO(
         List<ImageData> images, 
 
         @NotNull(message = "A categoria é obrigatória!")
-        ProjectCategoryDTO category
+        ProjectCategoryDTO category,
+
+        @NotNull(message = "O status é obrigatório!")
+        StatusDTO status,
+
+        @NotBlank(message = "O nome do evento é obrigatório!")
+        String eventName
 ) {
 }
 
