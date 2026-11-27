@@ -1,5 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.entity.AuditableEntity;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.CannotSaveImageException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.OpeningHours;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Entity 
 @Table(name = "tb_event")
-public class Event {
+public class Event extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
