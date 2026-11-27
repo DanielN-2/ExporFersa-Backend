@@ -1,7 +1,9 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.AuthRole;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 public record UserCreateDTO (
 
@@ -15,8 +17,6 @@ public record UserCreateDTO (
         String password,
 
         @NotBlank(message = "O usuario é obrigatório")
-        String username,
+        String username
 
-        @NotNull(message = "O perfil de usuário é obrigatório")
-        AuthRole role
 ) {}

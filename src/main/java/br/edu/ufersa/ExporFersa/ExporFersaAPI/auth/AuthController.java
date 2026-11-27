@@ -4,8 +4,11 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,8 +41,22 @@ public class AuthController {
     public ResponseEntity<TokenResponseDTO> logarUsuario(@RequestBody @Valid UserLoginDTO loginDto) {
         var authToken = new UsernamePasswordAuthenticationToken(loginDto.email(), loginDto.password());
         var authentication = authenticationManager.authenticate(authToken);
-        String token = tokenService.generateToken((Auth) authentication.getPrincipal());
+        if (!(authentication.getPrincipal() instanceof Auth user)) {
+            throw new InternalAuthenticationServiceException(
+                    "Não foi possível obter o usuário autenticado."
+            );
+        }
+        String token = tokenService.generateToken(user);
         return ResponseEntity.ok(new TokenResponseDTO(token));
+    }
+    @PostMapping("/admin/register")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResponseDTO> registerAdmin(
+            @Valid @RequestBody AdminCreateDTO dto
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(authApplicationService.registerAdmin(dto));
     }
 
     @GetMapping
@@ -50,6 +67,12 @@ public class AuthController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDTO> buscarPorId(@PathVariable UUID id) {
         return ResponseEntity.ok(authApplicationService.searchById(id));
+    }
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getMe(
+            @AuthenticationPrincipal Auth user
+    ) {
+        return ResponseEntity.ok(authApplicationService.getMe(user));
     }
 
     @PutMapping("/{id}")

@@ -1,5 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth;
 
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.AdminCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserUpdateDTO;
@@ -17,8 +18,18 @@ public interface AuthMapper {
     @Mapping(target = "imageURL", ignore = true)
     void updateUserFromDTO(UserUpdateDTO dto, @MappingTarget Auth user);
 
-    default Auth toEntity(UserCreateDTO dto, String encryptedPassword) {
-        return new Auth(dto.username(), dto.email(), encryptedPassword, dto.role(), null);
+    default Auth toEntity(UserCreateDTO dto, String encryptedPassword, AuthRole role) {
+        return new Auth(dto.username(), dto.email(), encryptedPassword, role, null);
+    }
+
+    default Auth toEntity(AdminCreateDTO dto, String encryptedPassword) {
+        return new Auth(
+                dto.username(),
+                dto.email(),
+                encryptedPassword,
+                dto.role(),
+                null
+        );
     }
 
     default UserResponseDTO toResponseDTO(Auth auth) {
