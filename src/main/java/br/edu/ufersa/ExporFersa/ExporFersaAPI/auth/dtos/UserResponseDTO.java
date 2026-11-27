@@ -1,9 +1,9 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos;
 
-import java.util.UUID;
-
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.AuthRole;
+
+import java.util.UUID;
 
 public record UserResponseDTO (
         UUID id,
@@ -14,6 +14,6 @@ public record UserResponseDTO (
         // FAZER A LISTAGEM DE PROJETOS E PROJETOS COM LIKES FUTURAMENTE
 ) {
     public UserResponseDTO(Auth auth) {
-        this(auth.getId(), auth.getEmail(), auth.getUsername(), auth.getRole(), auth.getImageURL());
+        this(auth.getId(), auth.getEmail(), auth.getName(), auth.getRole(), auth.getImageURL());
     }
 }
