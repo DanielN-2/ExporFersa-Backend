@@ -1,10 +1,6 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.auth;
 
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserAddImageDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserCreateDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserPasswordUpdateDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserResponseDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.UserUpdateDTO;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.dtos.*;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.EntityNotFoundException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
@@ -35,9 +31,22 @@ public class AuthApplicationService {
 
     @Transactional
     public UserResponseDTO register(UserCreateDTO dto) {
-        domainService.validationNewUser(dto.email());
+        domainService.validationNewUser(dto.email(), dto.username());
 
         String encryptedPassword = passwordEncoder.encode(dto.password());
+
+        AuthRole role = domainService.resolveRole(dto.email());
+
+        Auth auth = mapper.toEntity(dto, encryptedPassword, role);
+
+        return mapper.toResponseDTO(authRepository.save(auth));
+    }
+    @Transactional
+    public UserResponseDTO registerAdmin(AdminCreateDTO dto) {
+        domainService.validationNewUser(dto.email(), dto.username());
+
+        String encryptedPassword = passwordEncoder.encode(dto.password());
+
         Auth auth = mapper.toEntity(dto, encryptedPassword);
 
         return mapper.toResponseDTO(authRepository.save(auth));
@@ -52,6 +61,9 @@ public class AuthApplicationService {
     public UserResponseDTO searchById(UUID id) {
         Auth auth = getAuthOrThrow(id);
         return mapper.toResponseDTO(auth);
+    }
+    public UserResponseDTO getMe(Auth user) {
+        return new UserResponseDTO(user);
     }
 
     @Transactional
