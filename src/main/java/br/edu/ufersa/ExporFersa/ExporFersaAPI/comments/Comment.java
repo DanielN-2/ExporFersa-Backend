@@ -2,6 +2,7 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.Project;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.entity.AuditableEntity;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -9,7 +10,7 @@ import java.util.UUID;
 
 @Entity 
 @Table(name = "tb_comments")
-public class Comment {
+public class Comment extends AuditableEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

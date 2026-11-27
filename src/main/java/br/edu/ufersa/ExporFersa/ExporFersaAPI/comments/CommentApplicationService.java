@@ -4,6 +4,7 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos.CommentCreateDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos.CommentResponseDTO;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos.CommentUpdateDTO;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 @Service
 public class CommentApplicationService {
+    private static final Sort COMMENT_ORDER = Sort.by(Sort.Direction.DESC, "createdAt");
     private final CommentService commentService;
     private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
@@ -34,7 +36,7 @@ public class CommentApplicationService {
     }
 
     public List<CommentResponseDTO> list(Long projectId) {
-        List<Comment> list = commentRepository.findByProjectId(projectId);
+        List<Comment> list = commentRepository.findByProjectId(projectId, COMMENT_ORDER);
         return commentMapper.toResponseList(list);
     }
 

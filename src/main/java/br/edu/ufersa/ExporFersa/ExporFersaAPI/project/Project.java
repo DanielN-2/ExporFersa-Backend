@@ -3,6 +3,7 @@ package br.edu.ufersa.ExporFersa.ExporFersaAPI.project;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.Event;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.project.records.*;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.entity.AuditableEntity;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.CannotSaveImageException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions.InvalidOperationException;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
@@ -15,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "tb_project")
-public class Project {
+public class Project extends AuditableEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +62,7 @@ public class Project {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ProjectCategory category;
+
 
     protected Project() {
     }

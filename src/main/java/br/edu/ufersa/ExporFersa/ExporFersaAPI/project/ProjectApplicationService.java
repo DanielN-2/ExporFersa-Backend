@@ -13,6 +13,7 @@ import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.exceptions.domainExceptions
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.services.FileService;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,49 +42,64 @@ class ProjectApplicationService {
         this.fileService = fileService;
 
     }
+    private List<Project> findProjects(
+            ProjectCategory category,
+            Long eventId,
+            EventCategory eventCategory
+    ) {
+        return repository.findAll(
+                ProjectSpecification.withFilters(
+                        ProjectStatus.APPROVED,
+                        category,
+                        eventId,
+                        eventCategory
+                ),
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+    }
 
     @Transactional(readOnly = true)
     public List<ProjectResponseDTO> getProjects(ProjectCategoryDTO category, Auth user) {
-        List<Project> projects;
+        boolean hasFullAccess = user != null &&
+                (user.getRole() == AuthRole.USER ||
+                        user.getRole() == AuthRole.ADMIN);
 
-        if (user != null && (user.getRole() == AuthRole.USER || user.getRole() == AuthRole.ADMIN )) {
-            projects = category == null
-                    ? repository.findAllByStatus(ProjectStatus.APPROVED)
-                    : repository.findAllByStatusAndCategory(ProjectStatus.APPROVED,category.toDomain());
-        } else {
-            projects = category == null
-                    ? repository.findAllByStatusAndEventCategory(ProjectStatus.APPROVED, EventCategory.EXTENSAO)
-                    : repository.findAllByStatusAndCategoryAndEventCategory(ProjectStatus.APPROVED, category.toDomain(), EventCategory.EXTENSAO);
-        }
+        List<Project> projects = findProjects(
+                category == null ? null : category.toDomain(),
+                null,
+                hasFullAccess ? null : EventCategory.EXTENSAO
+        );
+
         return mapper.toResponseList(projects);
     }
 
     @Transactional(readOnly = true)
     public List<ProjectResponseDTO> getProjectsByEvent(ProjectCategoryDTO category, Long eventId, Auth user) {
-        List<Project> projects;
-        if (user != null && (user.getRole() == AuthRole.USER || user.getRole() == AuthRole.ADMIN )) {
-            projects= category == null
-                    ? repository.findAllByStatusAndEventId(ProjectStatus.APPROVED, eventId)
-                    : repository.findAllByStatusAndCategoryAndEventId(ProjectStatus.APPROVED, category.toDomain(), eventId);
+        boolean hasFullAccess = user != null &&
+                (user.getRole() == AuthRole.USER ||
+                        user.getRole() == AuthRole.ADMIN);
 
-        } else {
-            projects = category == null
-                    ? repository.findAllByStatusAndEventIdAndEventCategory(ProjectStatus.APPROVED, eventId, EventCategory.EXTENSAO)
-                    : repository.findAllByStatusAndCategoryAndEventIdAndEventCategory(
-                            ProjectStatus.APPROVED,
-                            category.toDomain(),
-                            eventId,
-                            EventCategory.EXTENSAO
-                    );
-        }
+        List<Project> projects = findProjects(
+                category == null ? null : category.toDomain(),
+                eventId,
+                hasFullAccess ? null : EventCategory.EXTENSAO
+        );
+
         return mapper.toResponseList(projects);
     }
 
     @Transactional(readOnly = true)
     public List<ProjectResponseDTO> getAdminProjects(StatusDTO status) {
-        List<Project> projects = status == null
-                ? repository.findAllWithEvent()
-                : repository.findAllByStatus(status.toDomain());
+        List<Project> projects = repository.findAll(
+                ProjectSpecification.withFilters(
+                        status == null ? null : status.toDomain(),
+                        null,
+                        null,
+                        null
+                ),
+                Sort.by(Sort.Direction.DESC, "createdAt")
+        );
+
         return mapper.toResponseList(projects);
     }
     public ProjectStatsDTO getProjectStats() {
@@ -96,7 +112,10 @@ class ProjectApplicationService {
     @Transactional(readOnly = true)
     public List<ProjectResponseDTO> getMyProjects(Auth user) {
         return mapper.toResponseList(
-                repository.findAllByAuthId(user.getId())
+                repository.findAllByAuthId(
+                        user.getId(),
+                        Sort.by(Sort.Direction.DESC, "createdAt")
+                )
         );
     }
 
@@ -104,8 +123,11 @@ class ProjectApplicationService {
     public ProjectResponseDTO getById(long projectId, Auth user) {
         Project project = repository.findById(projectId).orElseThrow(() -> new EntityNotFoundException("Projeto não encontrado!"));
 
-        if(project.getStatus() != ProjectStatus.APPROVED && user.getRole() != AuthRole.ADMIN) {
-            throw new AccessDeniedException("Você não possui permissão para visualizar esse projeto.");
+        if (project.getStatus() != ProjectStatus.APPROVED
+                && (user == null || user.getRole() != AuthRole.ADMIN)) {
+            throw new AccessDeniedException(
+                    "Você não possui permissão para visualizar esse projeto."
+            );
         }
 
         Event projectEvent = project.getEvent();

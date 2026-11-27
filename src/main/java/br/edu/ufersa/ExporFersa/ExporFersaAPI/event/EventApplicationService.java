@@ -1,15 +1,11 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.event;
 
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.auth.Auth;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventCreateDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventImageCreateDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventImageUpdateDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventResponseDTO;
-import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.EventUpdateDTO;
+import br.edu.ufersa.ExporFersa.ExporFersaAPI.event.dtos.*;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.records.ImageData;
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.shared.services.FileService;
 import jakarta.transaction.Transactional;
-
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +14,7 @@ import java.util.UUID;
 
 @Service 
 class EventApplicationService {
-    
+    private static final Sort EVENT_ORDER = Sort.by(Sort.Direction.DESC, "createdAt");
     private final EventRepository repository;
     private final EventService service;
     private final FileService fileService;
@@ -88,12 +84,12 @@ class EventApplicationService {
         List<Event> events;
 
         if (categories == null) {
-            events = repository.findAll();
+            events = repository.findAll(EVENT_ORDER);
             service.ValidateAcessListOfEvents(events, auth);
         } else {
             List<EventCategory> categoriesMapped = mapper.toCategories(categories);
             service.ValidateCategories(categoriesMapped, auth);
-            events = repository.findByCategoryIn(categoriesMapped);
+            events = repository.findByCategoryIn(categoriesMapped, EVENT_ORDER);
         }
 
         return mapper.toListResponseDTOs(events);
@@ -101,7 +97,7 @@ class EventApplicationService {
 
     @Transactional 
     List<EventResponseDTO> GetEventsByName(String name, Auth auth) {
-        List<Event> events = repository.findByNameContainingIgnoreCase(name);
+        List<Event> events = repository.findByNameContainingIgnoreCase(name, EVENT_ORDER);
         service.ValidateAcessListOfEvents(events, auth);
         return mapper.toListResponseDTOs(events);
     }
@@ -110,10 +106,10 @@ class EventApplicationService {
     List<EventResponseDTO> GetEventsByStatus(String status, Auth user) {
         EventStatus statusType = service.ValidateStatus(status);
 
-        List<Event> events = switch(statusType) {
-            case UPCOMING -> repository.findUpcomingEvents();
-            case ONGOING -> repository.findOngoingEvents();
-            case FINISHED -> repository.findFinishedEvents();
+        List<Event> events = switch (statusType) {
+            case UPCOMING -> repository.findUpcomingEvents(EVENT_ORDER);
+            case ONGOING -> repository.findOngoingEvents(EVENT_ORDER);
+            case FINISHED -> repository.findFinishedEvents(EVENT_ORDER);
         };
 
         service.ValidateAcessListOfEvents(events, user);
