@@ -23,7 +23,7 @@ public interface CommentMapper {
     }
 
     default CommentResponseDTO toResponse(Comment entity) {
-        CommentResponseDTO response = new CommentResponseDTO(entity.getId(), entity.getProject().getId(), entity.getAuth().getId(), entity.getCommentMessage());
+        CommentResponseDTO response = new CommentResponseDTO(entity.getId(), entity.getProject().getId(), entity.getAuth().getId(), entity.getAuth().getName(), entity.getCommentMessage());
         return response;
     }
 

@@ -1,11 +1,11 @@
 package br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.dtos;
 
-import java.util.UUID;
-
 import br.edu.ufersa.ExporFersa.ExporFersaAPI.comments.Comment;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.util.UUID;
 
 public record CommentResponseDTO(
     @NotNull(message = "O identificador do comentário não pode ser nulo na resposta.")
@@ -16,6 +16,8 @@ public record CommentResponseDTO(
 
     @NotNull(message = "O comentário precisa estar ligado a um usuário")
     UUID authId,
+    @NotBlank(message = "O nome do usuário não pode ser vazio")
+    String username,
 
     @NotBlank(message = "O comentário não pode ser vazio")
     @Size(max = 250, min = 1, message = "O comentário precisa ter entre 1 e 250 caracteres")
@@ -27,6 +29,7 @@ public record CommentResponseDTO(
             comment.getId(),
             comment.getProject().getId(),
             comment.getAuth().getId(),
+            comment.getAuth().getName(),
             comment.getCommentMessage()
         );
     }

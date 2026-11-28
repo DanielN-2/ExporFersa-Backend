@@ -45,6 +45,7 @@ public class SecurityConfig {
                 req.requestMatchers(HttpMethod.POST, "/api/v1/user").permitAll();
                 req.requestMatchers(HttpMethod.GET,"/api/v1/projects").permitAll();
                 req.requestMatchers(HttpMethod.GET, "/api/v1/projects/{projectId}").permitAll();
+                req.requestMatchers(HttpMethod.GET, "/api/v1/projects/{projectId}/comments").permitAll();
                 req.requestMatchers(HttpMethod.GET, "/api/v1/events/{eventId}/projects").permitAll();
                 req.requestMatchers(HttpMethod.GET, "/api/v1/events").permitAll();
                 req.requestMatchers(HttpMethod.GET, "/api/v1/events/date").permitAll();
